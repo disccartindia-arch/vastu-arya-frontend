@@ -86,9 +86,9 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <button onClick={() => setShowCartDrawer(true)} className="relative p-2 rounded-lg transition-colors hover:bg-orange-50">
                 <ShoppingCart size={20} style={{ color: '#5C3D1E' }} />
-                {totalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-xs font-bold flex items-center justify-center"
-                    style={{ background: '#FF6B00' }}>{totalItems()}</span>
+                {totalItems > 0 && (
+          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-xs font-bold flex items-center justify-center"
+                    style={{ background: '#FF6B00' }}>{totalItems}</span>
                 )}
               </button>
 
