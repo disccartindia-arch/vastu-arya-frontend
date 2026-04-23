@@ -49,30 +49,31 @@ export default function CategoryPage() {
       <main>
         {/* Header Section */}
         <section className="bg-dark-gradient py-12 text-center relative">
-          <div className="absolute inset-0 mandala-bg opacity-10" />
-          
-        <div className="text-6xl mb-3 flex justify-center">
-  <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent font-bold drop-shadow-[0_0_15px_rgba(255,215,0,0.7)] animate-pulse">
-    {cat?.emoji || 'ॐ'}
-  </span>
-</div>
+  <div className="absolute inset-0 mandala-bg opacity-10" />
 
-            <h1 className="font-display text-3xl font-bold text-white">
-              {cat
-                ? lang === 'hi'
-                  ? cat.labelHi
-                  : cat.label
-                : category}
-            </h1>
+  <div className="relative">
+    <div className="text-6xl mb-3 flex justify-center">
+      <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
+        {cat?.emoji || 'ॐ'}
+      </span>
+    </div>
 
-            <Link
-              href="/vastu-store"
-              className="text-primary text-sm mt-2 block hover:underline"
-            >
-              ← Back to Vastu Store
-            </Link>
-          </div>
-        </section>
+    <h1 className="font-display text-3xl font-bold text-white">
+      {cat
+        ? lang === 'hi'
+          ? cat.labelHi
+          : cat.label
+        : category}
+    </h1>
+
+    <Link
+      href="/vastu-store"
+      className="text-primary text-sm mt-2 block hover:underline"
+    >
+      ← Back to Vastu Store
+    </Link>
+  </div>
+</section>
 
         {/* Products Section */}
         <section className="py-12 bg-cream">
