@@ -1,14 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { productsAPI } from '../../../lib/api';
+import { useEffect, useState, useRef } from 'react';
+import { productsAPI, uploadAPI } from '../../../lib/api';
 import { Product } from '../../../types';
 import { formatPrice } from '../../../lib/utils';
-import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save, Upload, ImagePlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { STORE_CATEGORIES } from '../../../lib/utils';
 
 const emptyProduct = {
-  name: { en: '', hi: '' }, slug: '', category: 'gemstones',
+  name: { en: '', hi: '' }, slug: '', category: 'divine-frames',
   description: { en: '', hi: '' }, benefits: [''],
   price: 0, offerPrice: 0, images: [''], stock: 0,
   sku: '', isFeatured: false, isNewLaunch: false, isActive: true
@@ -22,6 +22,8 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState<any>(emptyProduct);
   const [saving, setSaving] = useState(false);
   const [catFilter, setCatFilter] = useState('');
+  const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const load = (cat?: string) => {
     const params: any = {};
@@ -31,13 +33,21 @@ export default function AdminProductsPage() {
   useEffect(() => { load(); }, []);
 
   const openAdd = () => { setEditing(null); setForm(emptyProduct); setShowModal(true); };
-  const openEdit = (p: Product) => { setEditing(p); setForm({ ...p, images: p.images.length ? p.images : [''], benefits: p.benefits.length ? p.benefits : [''] }); setShowModal(true); };
+  const openEdit = (p: Product) => {
+    setEditing(p);
+    setForm({ ...p, images: p.images.length ? p.images : [''], benefits: p.benefits.length ? p.benefits : [''] });
+    setShowModal(true);
+  };
 
   const handleSave = async () => {
     if (!form.name.en) return toast.error('Product name is required');
     setSaving(true);
     try {
-      const data = { ...form, images: form.images.filter((u: string) => u.trim()), benefits: form.benefits.filter((b: string) => b.trim()) };
+      const data = {
+        ...form,
+        images: form.images.filter((u: string) => u.trim()),
+        benefits: form.benefits.filter((b: string) => b.trim())
+      };
       if (!data.slug) data.slug = data.name.en.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       if (editing) { await productsAPI.update(editing._id, data); toast.success('Product updated!'); }
       else { await productsAPI.create(data); toast.success('Product created!'); }
@@ -48,13 +58,46 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this product?')) return;
-    try { await productsAPI.delete(id); toast.success('Deleted!'); load(catFilter); } catch { toast.error('Delete failed'); }
+    try { await productsAPI.delete(id); toast.success('Deleted!'); load(catFilter); }
+    catch { toast.error('Delete failed'); }
+  };
+
+  // ── Image Upload Handler ────────────────────────────────────────────────
+  const handleImageUpload = async (file: File, idx: number) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) return toast.error('Image must be under 5MB');
+    setUploadingIdx(idx);
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const { data } = await uploadAPI.single(fd);
+      const imgs = [...form.images];
+      imgs[idx] = data.data.url;
+      setForm({ ...form, images: imgs });
+      toast.success('Image uploaded!');
+    } catch { toast.error('Upload failed — try pasting a URL instead'); }
+    finally { setUploadingIdx(null); }
+  };
+
+  const setImageUrl = (idx: number, url: string) => {
+    const imgs = [...form.images];
+    imgs[idx] = url;
+    setForm({ ...form, images: imgs });
+  };
+
+  const addImageRow = () => setForm({ ...form, images: [...form.images, ''] });
+  const removeImageRow = (idx: number) => {
+    const imgs = form.images.filter((_: string, i: number) => i !== idx);
+    setForm({ ...form, images: imgs.length ? imgs : [''] });
   };
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div><h1 className="font-display text-2xl font-bold text-gray-800">Products</h1><p className="text-gray-500 text-sm">Manage Vastu Store products</p></div>
+        <div>
+          <h1 className="font-display text-2xl font-bold text-gray-800">Products</h1>
+          <p className="text-gray-500 text-sm">Manage Vastu Store products</p>
+        </div>
         <button onClick={openAdd} className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-orange">
           <Plus size={16}/> Add Product
         </button>
@@ -114,6 +157,7 @@ export default function AdminProductsPage() {
         )}
       </div>
 
+      {/* ── Add / Edit Modal ── */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
           <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -130,42 +174,85 @@ export default function AdminProductsPage() {
                     {STORE_CATEGORIES.map(c=><option key={c.slug} value={c.slug}>{c.emoji} {c.label}</option>)}
                   </select>
                 </div>
-                <div><label className="label-style">SKU</label><input value={form.sku} onChange={e=>setForm({...form,sku:e.target.value})} className="input-style w-full" placeholder="SKU-001"/></div>
+                <div><label className="label-style">SKU</label><input value={form.sku} onChange={e=>setForm({...form,sku:e.target.value})} className="input-style w-full" placeholder="VA-DF-001"/></div>
                 <div><label className="label-style">Original Price (₹) *</label><input type="number" value={form.price} onChange={e=>setForm({...form,price:+e.target.value})} className="input-style w-full"/></div>
                 <div><label className="label-style">Offer Price (₹) *</label><input type="number" value={form.offerPrice} onChange={e=>setForm({...form,offerPrice:+e.target.value})} className="input-style w-full"/></div>
                 <div><label className="label-style">Stock Quantity</label><input type="number" value={form.stock} onChange={e=>setForm({...form,stock:+e.target.value})} className="input-style w-full"/></div>
               </div>
+
               <div><label className="label-style">Description (English)</label><textarea value={form.description.en} onChange={e=>setForm({...form,description:{...form.description,en:e.target.value}})} className="input-style w-full" rows={3}/></div>
+              <div><label className="label-style">Description (Hindi)</label><textarea value={form.description.hi} onChange={e=>setForm({...form,description:{...form.description,hi:e.target.value}})} className="input-style w-full font-hindi" rows={2} placeholder="हिंदी विवरण (वैकल्पिक)"/></div>
+
+              {/* ── Image Upload Section ── */}
               <div>
-                <label className="label-style">Image URLs (one per line)</label>
-                {form.images.map((url: string, i: number) => (
-                  <input key={i} value={url} onChange={e=>{const imgs=[...form.images];imgs[i]=e.target.value;setForm({...form,images:imgs});}} className="input-style w-full mb-2" placeholder="https://example.com/image.jpg"/>
-                ))}
-                <button onClick={()=>setForm({...form,images:[...form.images,'']})} className="text-primary text-xs hover:underline">+ Add Image URL</button>
+                <label className="label-style mb-2">Product Images</label>
+                <div className="space-y-2">
+                  {form.images.map((url: string, i: number) => (
+                    <div key={i} className="flex items-center gap-2">
+                      {/* Image preview */}
+                      <div className="w-12 h-12 rounded-lg border border-orange-200 overflow-hidden flex-shrink-0 bg-orange-50 flex items-center justify-center">
+                        {url ? <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display='none'; }} /> : <ImagePlus size={16} className="text-gray-300" />}
+                      </div>
+                      {/* URL input */}
+                      <input
+                        value={url}
+                        onChange={e => setImageUrl(i, e.target.value)}
+                        className="input-style flex-1 text-sm"
+                        placeholder="Paste image URL or upload below →"
+                      />
+                      {/* Upload button */}
+                      <label className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all flex-shrink-0 ${uploadingIdx === i ? 'bg-gray-100 text-gray-400' : 'bg-primary/10 text-primary hover:bg-primary hover:text-white'}`}>
+                        {uploadingIdx === i ? <><Upload size={13} className="animate-spin" /> Uploading…</> : <><Upload size={13} /> Upload</>}
+                        <input
+                          type="file" accept="image/*" className="hidden"
+                          disabled={uploadingIdx !== null}
+                          onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(f, i); e.target.value = ''; }}
+                        />
+                      </label>
+                      {/* Remove row */}
+                      {form.images.length > 1 && (
+                        <button onClick={() => removeImageRow(i)} className="p-1.5 text-red-400 hover:bg-red-50 rounded-lg flex-shrink-0"><X size={13}/></button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={addImageRow} className="text-primary text-xs hover:underline mt-2 flex items-center gap-1">
+                  <Plus size={12}/> Add Another Image
+                </button>
+                <p className="text-xs text-gray-400 mt-1">Max 5MB per image. Accepted: JPG, PNG, WebP, SVG.</p>
               </div>
+
+              {/* Benefits */}
               <div>
-                <label className="label-style">Benefits (one per line)</label>
+                <label className="label-style">Key Benefits</label>
                 {form.benefits.map((b: string, i: number) => (
-                  <input key={i} value={b} onChange={e=>{const bens=[...form.benefits];bens[i]=e.target.value;setForm({...form,benefits:bens});}} className="input-style w-full mb-2" placeholder={`Benefit ${i+1}`}/>
+                  <input key={i} value={b} onChange={e=>{const bens=[...form.benefits];bens[i]=e.target.value;setForm({...form,benefits:bens});}} className="input-style w-full mb-2" placeholder={`Benefit ${i+1} (e.g. Removes Vastu doshas)`}/>
                 ))}
                 <button onClick={()=>setForm({...form,benefits:[...form.benefits,'']})} className="text-primary text-xs hover:underline">+ Add Benefit</button>
               </div>
+
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isActive} onChange={e=>setForm({...form,isActive:e.target.checked})} className="w-4 h-4 accent-primary"/><span className="text-sm">Active</span></label>
                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isFeatured} onChange={e=>setForm({...form,isFeatured:e.target.checked})} className="w-4 h-4 accent-primary"/><span className="text-sm">Featured</span></label>
                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isNewLaunch} onChange={e=>setForm({...form,isNewLaunch:e.target.checked})} className="w-4 h-4 accent-primary"/><span className="text-sm">New Launch</span></label>
               </div>
             </div>
+
             <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 flex gap-3">
               <button onClick={()=>setShowModal(false)} className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium">Cancel</button>
-              <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-dark disabled:opacity-60 flex items-center justify-center gap-2">
+              <button onClick={handleSave} disabled={saving || uploadingIdx !== null} className="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-dark disabled:opacity-60 flex items-center justify-center gap-2">
                 <Save size={15}/>{saving?'Saving...':'Save Product'}
               </button>
             </div>
           </div>
         </div>
       )}
-      <style jsx global>{`.label-style{display:block;font-size:.8rem;font-weight:500;color:#5C3D1E;margin-bottom:4px}.input-style{padding:8px 12px;border:1px solid #fed7aa;border-radius:10px;font-size:.875rem;outline:none;transition:border-color .2s}.input-style:focus{border-color:#FF6B00;box-shadow:0 0 0 2px rgba(255,107,0,.1)}`}</style>
+
+      <style jsx global>{`
+        .label-style{display:block;font-size:.8rem;font-weight:500;color:#5C3D1E;margin-bottom:4px}
+        .input-style{padding:8px 12px;border:1px solid #fed7aa;border-radius:10px;font-size:.875rem;outline:none;transition:border-color .2s}
+        .input-style:focus{border-color:#FF6B00;box-shadow:0 0 0 2px rgba(255,107,0,.1)}
+      `}</style>
     </div>
   );
 }
