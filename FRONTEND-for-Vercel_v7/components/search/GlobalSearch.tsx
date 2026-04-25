@@ -77,7 +77,7 @@ export default function GlobalSearch({ placeholder = 'Search Vastu tips, service
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
       try {
-        const r = await searchAPI.search(q, { headers: { 'x-session-id': getSessionId() } });
+        const r = await searchAPI.search(q);
         setResults(r?.data?.data || null);
       } catch { setResults(null); }
       finally { setLoading(false); }

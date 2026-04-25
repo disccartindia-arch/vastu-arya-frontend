@@ -141,7 +141,7 @@ export const themeSettingsAPI = {
 
 // ─── Search ───────────────────────────────────────────────────────────────────
 export const searchAPI = {
-  search: (q: string, limit = 8) => api.get('/search', { params: { q, limit } }),
+  search: (q: string, limit = 8) => api.get('/search', { params: { q, limit }, headers: typeof window !== 'undefined' ? { 'x-session-id': sessionStorage.getItem('va_search_session') || '' } : {} }),
   trending: () => api.get('/search/trending'),
   logClick: (query: string, clickedSlug: string, clickedType: string) =>
     api.post('/search/log-click', { query, clickedSlug, clickedType }),
