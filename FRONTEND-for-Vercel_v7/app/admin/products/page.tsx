@@ -22,6 +22,7 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState<any>(emptyProduct);
   const [saving, setSaving] = useState(false);
   const [catFilter, setCatFilter] = useState('');
+  const [seeding, setSeeding] = useState(false);
 
   const load = (cat?: string) => {
     const params: any = {};
