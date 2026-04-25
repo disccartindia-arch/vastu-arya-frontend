@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { productsAPI } from '../../../lib/api';
+import { productsAPI, adminAPI } from '../../../lib/api';
 import { Product } from '../../../types';
 import { formatPrice } from '../../../lib/utils';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
