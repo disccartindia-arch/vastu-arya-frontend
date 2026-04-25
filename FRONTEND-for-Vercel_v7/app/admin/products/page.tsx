@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { productsAPI, adminAPI } from '../../../lib/api';
+import { productsAPI } from '../../../lib/api';
 import { Product } from '../../../types';
 import { formatPrice } from '../../../lib/utils';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
@@ -22,7 +22,6 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState<any>(emptyProduct);
   const [saving, setSaving] = useState(false);
   const [catFilter, setCatFilter] = useState('');
-  const [seeding, setSeeding] = useState(false);
 
   const load = (cat?: string) => {
     const params: any = {};
@@ -30,18 +29,6 @@ export default function AdminProductsPage() {
     productsAPI.getAdminAll(params).then(r => setProducts(r.data.data || [])).finally(() => setLoading(false));
   };
   useEffect(() => { load(); }, []);
-
-  const handleSeed = async () => {
-    if (!confirm('This will insert all 45 sample products (skips any that already exist). Continue?')) return;
-    setSeeding(true);
-    try {
-      const { data } = await adminAPI.seedProducts();
-      toast.success(data.message || 'Products seeded!');
-      load(catFilter);
-    } catch (e: any) {
-      toast.error(e?.response?.data?.message || 'Seed failed');
-    } finally { setSeeding(false); }
-  };
 
   const openAdd = () => { setEditing(null); setForm(emptyProduct); setShowModal(true); };
   const openEdit = (p: Product) => { setEditing(p); setForm({ ...p, images: p.images.length ? p.images : [''], benefits: p.benefits.length ? p.benefits : [''] }); setShowModal(true); };
@@ -68,14 +55,9 @@ export default function AdminProductsPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div><h1 className="font-display text-2xl font-bold text-gray-800">Products</h1><p className="text-gray-500 text-sm">Manage Vastu Store products</p></div>
-        <div className="flex gap-2">
-          <button onClick={handleSeed} disabled={seeding} className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-60" title="Insert 45 sample products (skips existing)">
-            {seeding ? '⏳ Seeding...' : '🌱 Seed 45 Products'}
-          </button>
-          <button onClick={openAdd} className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-orange">
+        <button onClick={openAdd} className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-orange">
           <Plus size={16}/> Add Product
-          </button>
-        </div>
+        </button>
       </div>
 
       {/* Category filter */}
