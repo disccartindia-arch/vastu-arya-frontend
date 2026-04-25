@@ -39,6 +39,7 @@ export interface HeroSettings {
   trustBadges?: { label: string; order: number }[];
   stats?: { value: string; label: string; order: number }[];
   heroBgTheme?: 'dark' | 'light';
+  servicesButtonText?: string;
 }
 
 interface Props {
