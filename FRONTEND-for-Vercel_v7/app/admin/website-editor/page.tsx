@@ -95,6 +95,17 @@ const DEFAULT_HP = {
   cta1Link: '/book-appointment',
   cta2Text: 'Explore Vastu Store',
   cta2Link: '/vastu-store',
+  // Brand
+  brandName: 'Vastu Arya',
+  brandSubtitle: 'IVAF Certified',
+  brandFontSize: '18',
+  // Contact info (shared by footer, contact page, navbar)
+  contactPhone: '+91-9999999999',
+  contactEmail: 'contact@vastuarya.com',
+  contactAddress: 'New Delhi, India',
+  contactWhatsapp: '919999999999',
+  // Services section
+  servicesButtonText: 'View All 100+ Services',
   trustBadges: [
     { label: 'IVAF Awarded', order: 0 },
     { label: '10,000+ Consultations', order: 1 },
@@ -414,6 +425,60 @@ export default function WebsiteEditorPage() {
       {/* ── TAB: Homepage Settings ──────────────────────────────────────────── */}
       {activeTab === 'homepage' && (
         <div className="space-y-5 max-w-3xl">
+
+          {/* Brand Identity */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+            <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">🏷️ Brand Identity (Navbar Logo Text)</h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="label-style">Brand Name</label>
+                <input value={homepageSettings.brandName || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, brandName: e.target.value }))} className="input-style" placeholder="Vastu Arya" />
+              </div>
+              <div>
+                <label className="label-style">Brand Subtitle (gold text)</label>
+                <input value={homepageSettings.brandSubtitle || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, brandSubtitle: e.target.value }))} className="input-style" placeholder="IVAF Certified" />
+              </div>
+              <div>
+                <label className="label-style">Brand Name Font Size (px)</label>
+                <input type="number" min="12" max="32" value={homepageSettings.brandFontSize || '18'} onChange={e => setHomepageSettings((p: any) => ({ ...p, brandFontSize: e.target.value }))} className="input-style" placeholder="18" />
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+            <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">📞 Contact Info (Navbar, Footer & Contact Page)</h3>
+            <p className="text-xs text-gray-400 -mt-2">Changes here update the top bar, footer contact section, and the /contact page.</p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="label-style">Phone Number</label>
+                <input value={homepageSettings.contactPhone || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactPhone: e.target.value, contactNumber: e.target.value }))} className="input-style" placeholder="+91-9999999999" />
+              </div>
+              <div>
+                <label className="label-style">Email Address</label>
+                <input value={homepageSettings.contactEmail || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactEmail: e.target.value }))} className="input-style" placeholder="contact@vastuarya.com" />
+              </div>
+              <div>
+                <label className="label-style">Office Address / Location</label>
+                <input value={homepageSettings.contactAddress || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactAddress: e.target.value }))} className="input-style" placeholder="New Delhi, India" />
+              </div>
+              <div>
+                <label className="label-style">WhatsApp Number (digits only)</label>
+                <input value={homepageSettings.contactWhatsapp || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactWhatsapp: e.target.value }))} className="input-style" placeholder="919999999999" />
+              </div>
+            </div>
+          </div>
+
+          {/* Services button */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+            <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">🔗 Services Section Button</h3>
+            <p className="text-xs text-gray-400 -mt-2">The "View All 100+ Services" button on the homepage. Update the number here to keep it in sync with your Stats above.</p>
+            <div>
+              <label className="label-style">Button Text</label>
+              <input value={homepageSettings.servicesButtonText || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, servicesButtonText: e.target.value }))} className="input-style" placeholder="View All 100+ Services" />
+            </div>
+          </div>
+
           {/* Basic fields */}
           <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
             <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">Contact & Hero Content</h3>
@@ -557,27 +622,104 @@ export default function WebsiteEditorPage() {
 
       {/* ── TAB: Background & FX ───────────────────────────────────────────── */}
       {activeTab === 'background' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm max-w-2xl space-y-4">
-          {/* ── Hero Background Theme ── */}
-          <div className="mb-2">
-            <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100 mb-4">Hero Section Background Theme</h3>
-            <p className="text-xs text-gray-500 mb-3">Choose the homepage hero background style. Changes apply on next page load.</p>
-            <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="max-w-2xl space-y-5">
+
+          {/* Hero Section Theme */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+            <div>
+              <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">Hero Section Background Theme</h3>
+              <p className="text-xs text-gray-400 mt-2">Controls the homepage hero section background style. Changes apply on next page load.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               {[
-                { value: 'light', emoji: '☀️', label: 'Warm Light', desc: 'Rich cream / warm white background' },
-                { value: 'dark', emoji: '🌙', label: 'Dark', desc: 'Classic rich dark-brown background' },
-              ].map(opt => (
-                <button key={opt.value}
-                  onClick={() => setConfig((c: any) => ({ ...c, hero_bg_theme: opt.value }))}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${(config.hero_bg_theme || 'light') === opt.value ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <div className="text-xl mb-1">{opt.emoji}</div>
-                  <div className="font-semibold text-sm text-gray-800">{opt.label}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{opt.desc}</div>
+                { key: 'warm', emoji: '🌤️', label: 'Warm Light', desc: 'Rich cream / white background (recommended)' },
+                { key: 'dark', emoji: '🌙', label: 'Dark', desc: 'Classic rich dark-brown background' },
+              ].map(t => (
+                <button key={t.key} onClick={() => setConfig((c: any) => ({ ...c, hero_theme: t.key }))}
+                  className={`text-left p-4 rounded-2xl border-2 transition-all ${config.hero_theme === t.key || (!config.hero_theme && t.key === 'warm') ? 'border-primary bg-orange-50' : 'border-gray-200 hover:border-orange-200'}`}>
+                  <div className="text-2xl mb-2">{t.emoji}</div>
+                  <p className="font-semibold text-gray-800 text-sm">{t.label}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{t.desc}</p>
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Festival / Occasion Theme Builder */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+            <div>
+              <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">🎉 Festival & Occasion Theme</h3>
+              <p className="text-xs text-gray-400 mt-2">Apply a colourful live theme for special occasions. Overrides the hero background temporarily.</p>
+            </div>
+            {/* Quick presets */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Quick Presets</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {[
+                  { key: 'diwali',     label: '🪔 Diwali',       from: '#7C2D12', to: '#F59E0B', accent: '#FCD34D' },
+                  { key: 'holi',       label: '🌈 Holi',         from: '#7E22CE', to: '#EC4899', accent: '#FDE68A' },
+                  { key: 'navratri',   label: '🔴 Navratri',     from: '#991B1B', to: '#F97316', accent: '#FCA5A5' },
+                  { key: 'christmas',  label: '🎄 Christmas',    from: '#14532D', to: '#DC2626', accent: '#FEF9C3' },
+                  { key: 'newyear',    label: '🎆 New Year',     from: '#1E1B4B', to: '#6D28D9', accent: '#C4B5FD' },
+                  { key: 'eid',        label: '🌙 Eid',          from: '#064E3B', to: '#10B981', accent: '#D1FAE5' },
+                ].map(p => (
+                  <button key={p.key}
+                    onClick={() => setConfig((c: any) => ({ ...c, festival_enabled: true, festival_from: p.from, festival_to: p.to, festival_accent: p.accent, festival_label: p.label }))}
+                    className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${config.festival_label === p.label && config.festival_enabled ? 'border-primary bg-orange-50 text-primary' : 'border-gray-200 hover:border-orange-300 text-gray-700'}`}>
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Custom colours */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Custom Colours</p>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { key: 'festival_from',   label: 'Gradient Start' },
+                  { key: 'festival_to',     label: 'Gradient End' },
+                  { key: 'festival_accent', label: 'Accent / Glow' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="label-style">{f.label}</label>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg border border-gray-200 overflow-hidden flex-shrink-0">
+                        <input type="color" value={config[f.key] || '#FF6B00'}
+                          onChange={e => setConfig((c: any) => ({ ...c, [f.key]: e.target.value }))}
+                          className="w-10 h-10 -m-1 cursor-pointer border-0 bg-transparent" />
+                      </div>
+                      <input value={config[f.key] || ''} onChange={e => setConfig((c: any) => ({ ...c, [f.key]: e.target.value }))}
+                        className="input-style font-mono text-xs" placeholder="#FF6B00" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Live preview strip */}
+            {(config.festival_from || config.festival_to) && (
+              <div className="rounded-xl overflow-hidden h-12 w-full"
+                style={{ background: `linear-gradient(135deg, ${config.festival_from || '#FF6B00'}, ${config.festival_to || '#FF9933'})`, boxShadow: `0 0 20px ${config.festival_accent || '#FCD34D'}55` }}>
+                <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold tracking-wide opacity-90">
+                  Live Preview — {config.festival_label || 'Custom Theme'}
+                </div>
+              </div>
+            )}
+            {/* Enable / Disable toggle */}
+            <div className="flex items-center justify-between pt-1">
+              <div>
+                <p className="font-medium text-gray-800 text-sm">Enable Festival Theme</p>
+                <p className="text-xs text-gray-400">Overrides hero background with the colours above</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" checked={!!config.festival_enabled}
+                  onChange={e => setConfig((c: any) => ({ ...c, festival_enabled: e.target.checked }))} className="sr-only peer" />
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-primary after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+              </label>
+            </div>
+          </div>
+
+          {/* Gold Particle Controls */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
           <h3 className="font-semibold text-gray-800 pb-2 border-b border-gray-100">Gold Particle Background Controls</h3>
           {BG_FIELDS.map(f => (
             <div key={f.key} className="flex items-center justify-between py-3 border-b border-gray-50 last:border-0">
@@ -603,6 +745,7 @@ export default function WebsiteEditorPage() {
           <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-yellow-700">
             💡 Background animations are GPU-optimized. Changes apply on next page load.
           </div>
+        </div>
         </div>
       )}
 
