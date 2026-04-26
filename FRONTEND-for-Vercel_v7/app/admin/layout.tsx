@@ -28,12 +28,12 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router   = useRouter();
   const pathname = usePathname();
-  const { user, isAdmin, checkAuth } = useAuthStore();
+  const { user, isAdmin } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+ useEffect(() => {
+  // auth is persisted via zustand persist middleware
+}, []);
 
   useEffect(() => {
     if (pathname === '/admin/login') return;
