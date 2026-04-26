@@ -14,7 +14,8 @@ const navItems = [
   { href: '/admin/website-editor', label: 'Website Editor',     icon: Globe,        badge: 'NEW' },
   { href: '/admin/ai-settings',    label: 'AI Vastu Settings',  icon: Sparkles,     badge: 'NEW' },
   { href: '/admin/services',       label: 'Services',           icon: Layers },
-  { href: '/admin/products',       label: 'Products',           icon: Package },
+  { href: '/admin/products',          label: 'Products',           icon: Package },
+  { href: '/admin/product-generator', label: 'AI Product Gen',      icon: Sparkles },
   { href: '/admin/orders',         label: 'Orders',             icon: ShoppingBag },
   { href: '/admin/bookings',       label: 'Bookings',           icon: Calendar },
   { href: '/admin/blogs',          label: 'Blogs',              icon: BookOpen },
@@ -28,12 +29,12 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router   = useRouter();
   const pathname = usePathname();
-  const { user, isAdmin } = useAuthStore();
+  const { user, isAdmin, checkAuth } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
- useEffect(() => {
-  // auth is persisted via zustand persist middleware
-}, []);
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   useEffect(() => {
     if (pathname === '/admin/login') return;
