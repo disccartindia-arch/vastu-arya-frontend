@@ -171,3 +171,7 @@ export const aiSettingsAPI = {
   update: (d: any) => api.put('/ai-settings', d),
   reset:  () => api.post('/ai-settings/reset'),
 };
+
+export const aiStatusAPI = {
+  check: () => api.get('/ai/status'),
+};
