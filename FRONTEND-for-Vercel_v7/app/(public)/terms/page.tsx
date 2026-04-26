@@ -1,7 +1,6 @@
+'use client';
 import Navbar from '../../../components/layout/Navbar';
 import Footer from '../../../components/layout/Footer';
-
-export const metadata = { title: 'Terms of Service | Vastu Arya' };
 
 export default function TermsPage() {
   return (
