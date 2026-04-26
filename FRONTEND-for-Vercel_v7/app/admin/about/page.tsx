@@ -9,11 +9,11 @@ const DEFAULT = {
   hero_title: 'About Vastu Arya',
   hero_subtitle: "India's Premier Vastu & Astrology Platform",
   hero_bg_image: '',
-  expert_name: 'Dr. Pranoy Pratap Singh Tomar',
+  expert_name: 'Dr. Pranveer Pratap Singh Tomar',
   expert_title: 'IVAF Certified Vastu Master',
   expert_image: '',
-  expert_bio1: "Dr. Pranoy Pratap Singh Tomar is one of India's most respected Vastu Shastra experts, holding a prestigious Doctorate degree in Vastu Vadana. Awarded by the International Vedic Astrology Federation (IVAF LLC, USA) and recognized in New Delhi, he has transformed over 45,000 lives.",
-  expert_bio2: 'With 15+ years spanning residential Vastu, commercial properties, numerology, gemology, and astrology — Dr. Pranoy brings a scientific, evidence-based approach to ancient Vedic wisdom.',
+  expert_bio1: "Dr. Pranveer Pratap Singh Tomar is one of India's most respected Vastu Shastra experts, holding a prestigious Doctorate degree in Vastu Vadana. Awarded by the International Vedic Astrology Federation (IVAF LLC, USA) and recognized in New Delhi, he has transformed over 45,000 lives.",
+  expert_bio2: 'With 15+ years spanning residential Vastu, commercial properties, numerology, gemology, and astrology — Dr. Pranveer brings a scientific, evidence-based approach to ancient Vedic wisdom.',
   stat1_value: '45,000+', stat1_label: 'Happy Clients',
   stat2_value: '15+',     stat2_label: 'Years Experience',
   stat3_value: '100+',    stat3_label: 'Services Offered',
@@ -50,7 +50,7 @@ export default function AdminAboutPage() {
         type: key.includes('image') || key.includes('bg') ? 'image' : 'text',
         label: key.replace(/_/g, ' '),
       }));
-      await contentAPI.bulkUpdate({ items });
+      await contentAPI.bulkUpdate( items );
       toast.success('About page saved!');
     } catch {
       toast.error('Save failed. Please try again.');
