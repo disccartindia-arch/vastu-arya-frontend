@@ -159,3 +159,8 @@ export const searchAPI = {
     api.post('/search/log-click', { query, clickedSlug, clickedType }),
   analytics: () => api.get('/search/analytics'),
 };
+
+export const aiAPI = {
+  vastuAnalysis: (d: { concern: string; roomType?: string; direction?: string }) =>
+    api.post('/ai/vastu-analysis', d),
+};
