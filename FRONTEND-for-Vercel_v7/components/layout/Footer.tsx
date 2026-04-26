@@ -7,7 +7,7 @@ import { homepageSettingsAPI } from '../../lib/api';
 
 export default function Footer() {
   const { lang } = useUIStore();
-  const [fd, setFd] = useState({ phone: '+91-9999999999', email: 'contact@vastuarya.com', address: 'New Delhi, India', whatsapp: '919999999999', copyright: '© 2024 Vastu Arya | IVAF Certified | Made with love in India', instagram: '#', facebook: '#', youtube: '#', twitter: '#' });
+  const [fd, setFd] = useState({ phone: '+91-7000343804', email: 'contact@vastuarya.com', address: 'New Delhi, India', whatsapp: '917000343804', copyright: '© 2024 Vastu Arya | IVAF Certified | Made with love in India', instagram: '#', facebook: '#', youtube: '#', twitter: '#' });
 
   useEffect(() => {
     homepageSettingsAPI.get().then((r: any) => {
@@ -66,10 +66,12 @@ export default function Footer() {
           <ul className="space-y-2">
             {[
               ['/book-appointment', lang === 'en' ? 'Book Appointment (₹11)' : 'अपॉइंटमेंट (₹11)'],
-              ['/mobile-numerology', lang === 'en' ? 'Mobile Numerology' : 'मोबाइल नंबर ज्योतिष'],
-              ['/vastu-check', lang === 'en' ? 'Vastu Check' : 'वास्तु जांच'],
-              ['/smart-layout', lang === 'en' ? 'Smart Layout Plan' : 'स्मार्ट लेआउट प्लान'],
               ['/vastu-consultancy', lang === 'en' ? 'Dr. PPS Tomar Consultancy' : 'डॉ. PPS परामर्श'],
+              ['/home-energy-analysis', lang === 'en' ? 'Home Energy Analysis' : 'घर ऊर्जा विश्लेषण'],
+              ['/business-vastu', lang === 'en' ? 'Business Vastu' : 'व्यापार वास्तु'],
+              ['/vastu-check', lang === 'en' ? 'Vastu Check' : 'वास्तु जांच'],
+              ['/mobile-numerology', lang === 'en' ? 'Mobile Numerology' : 'मोबाइल नंबर ज्योतिष'],
+              ['/gemstone-guidance', lang === 'en' ? 'Gemstone Guidance' : 'रत्न मार्गदर्शन'],
             ].map(([slug, label]) => (
               <li key={slug}>
                 <Link href={`/services${slug}`} className="text-sm transition-colors hover:text-yellow-400" style={{ color: '#6B7280' }}>{label}</Link>

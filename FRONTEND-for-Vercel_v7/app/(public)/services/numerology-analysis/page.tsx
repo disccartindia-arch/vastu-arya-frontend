@@ -34,10 +34,10 @@ export default function NumerologyAnalysisPage() {
       amount: 499,
       name: form.name,
       email: form.email,
-      phone: '9999999999',
+      phone: '7000343804',
       description: 'Numerology Analysis Report',
       type: 'service',
-      orderData: { name: form.name, email: form.email, phone: '9999999999', serviceName: 'Numerology Analysis', amount: 499, formData: form },
+      orderData: { name: form.name, email: form.email, phone: '7000343804', serviceName: 'Numerology Analysis', amount: 499, formData: form },
       onSuccess: () => { setLoading(false); toast.success('🎉 Booking confirmed! You\'ll receive your report within 48 hours.'); setShowForm(false); },
       onFailure: () => setLoading(false),
     });

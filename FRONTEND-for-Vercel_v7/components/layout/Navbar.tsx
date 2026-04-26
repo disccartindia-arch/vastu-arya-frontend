@@ -25,7 +25,7 @@ export default function Navbar() {
   const { lang, setLang, setShowAppointmentPopup, mobileMenuOpen, setMobileMenuOpen, setShowCartDrawer } = useUIStore();
   const totalItems = useCartStore(s => s.totalItems);
   const { user, logout, isAdmin } = useAuthStore();
-  const [brand, setBrand] = useState({ name: 'Vastu Arya', subtitle: 'IVAF Certified', phone: '+91-9999999999' });
+  const [brand, setBrand] = useState({ name: 'Vastu Arya', subtitle: 'IVAF Certified', phone: '+91-7000343804' });
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -36,7 +36,7 @@ export default function Navbar() {
         if (d) setBrand({
           name: d.brandName || 'Vastu Arya',
           subtitle: d.brandSubtitle || 'IVAF Certified',
-          phone: d.contactPhone || d.contactNumber || '+91-9999999999',
+          phone: d.contactPhone || d.contactNumber || '+91-7000343804',
         });
       })
       .catch(() => {});

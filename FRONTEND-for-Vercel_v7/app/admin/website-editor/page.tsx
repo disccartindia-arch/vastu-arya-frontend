@@ -89,7 +89,7 @@ const TABS: { id: TabId; label: string; icon: any }[] = [
 ];
 
 const DEFAULT_HP = {
-  contactNumber: '+91-9999999999',
+  contactNumber: '+91-7000343804',
   heroHeading: 'Transform Your Space, Transform Your Life',
   heroSubheading: "India's Premier Vastu Shastra & Astrology Platform by Dr. PPS Tomar",
   cta1Text: 'Book Appointment @ ₹11',
@@ -101,10 +101,10 @@ const DEFAULT_HP = {
   brandSubtitle: 'IVAF Certified',
   brandFontSize: '18',
   // Contact info (shared by footer, contact page, navbar)
-  contactPhone: '+91-9999999999',
+  contactPhone: '+91-7000343804',
   contactEmail: 'contact@vastuarya.com',
   contactAddress: 'New Delhi, India',
-  contactWhatsapp: '919999999999',
+  contactWhatsapp: '917000343804',
   // Services section
   servicesButtonText: 'View All 100+ Services',
   trustBadges: [
@@ -453,7 +453,7 @@ export default function WebsiteEditorPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="label-style">Phone Number</label>
-                <input value={homepageSettings.contactPhone || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactPhone: e.target.value, contactNumber: e.target.value }))} className="input-style" placeholder="+91-9999999999" />
+                <input value={homepageSettings.contactPhone || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactPhone: e.target.value, contactNumber: e.target.value }))} className="input-style" placeholder="+91-7000343804" />
               </div>
               <div>
                 <label className="label-style">Email Address</label>
@@ -465,7 +465,7 @@ export default function WebsiteEditorPage() {
               </div>
               <div>
                 <label className="label-style">WhatsApp Number (digits only)</label>
-                <input value={homepageSettings.contactWhatsapp || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactWhatsapp: e.target.value }))} className="input-style" placeholder="919999999999" />
+                <input value={homepageSettings.contactWhatsapp || ''} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactWhatsapp: e.target.value }))} className="input-style" placeholder="917000343804" />
               </div>
             </div>
           </div>
@@ -486,7 +486,7 @@ export default function WebsiteEditorPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <label className="label-style">Top-Left Contact Number</label>
-                <input value={homepageSettings.contactNumber} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactNumber: e.target.value }))} className="input-style" placeholder="+91-9999999999" />
+                <input value={homepageSettings.contactNumber} onChange={e => setHomepageSettings((p: any) => ({ ...p, contactNumber: e.target.value }))} className="input-style" placeholder="+91-7000343804" />
               </div>
               <div className="sm:col-span-2">
                 <label className="label-style">Hero Main Heading</label>

@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "name": "Vastu Arya",
           "description": "India's premier Vastu Shastra & Astrology platform by Dr. PPS Tomar",
           "url": "https://vastuarya.com",
-          "telephone": "+91-9999999999",
+          "telephone": "+91-7000343804",
           "address": { "@type": "PostalAddress", "addressLocality": "New Delhi", "addressCountry": "IN" },
           "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "45000" }
         })}} />

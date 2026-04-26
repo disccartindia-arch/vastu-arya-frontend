@@ -52,10 +52,10 @@ export default function ServiceDetailPage() {
     await initiateRazorpayPayment({
       amount: service.offerPrice,
       name: 'Customer',
-      phone: '9999999999',
+      phone: '7000343804',
       description: service.title.en,
       type: 'service',
-      orderData: { name: 'Customer', phone: '9999999999', serviceName: service.title.en, amount: service.offerPrice },
+      orderData: { name: 'Customer', phone: '7000343804', serviceName: service.title.en, amount: service.offerPrice },
       onSuccess: () => { setPaying(false); toast.success('Booking confirmed!'); },
       onFailure: () => setPaying(false),
     });

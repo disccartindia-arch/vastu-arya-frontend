@@ -21,7 +21,7 @@ const DEFAULT_CONCERNS = [
 ];
 const ROOM_TYPES  = ['Living Room','Bedroom','Kitchen','Home Office','Entire Home','Shop/Office','Factory'];
 const DIRECTIONS  = ['North','South','East','West','North-East','North-West','South-East','South-West'];
-const WA          = '919999999999';
+const WA          = '917000343804';
 
 /* ─── Types ─────────────────────────────────────────────────── */
 interface Remedy   { title: string; action: string; zone: string; benefit: string; }

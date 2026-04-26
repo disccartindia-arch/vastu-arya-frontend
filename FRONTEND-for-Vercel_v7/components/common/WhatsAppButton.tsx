@@ -6,7 +6,7 @@ export default function WhatsAppButton() {
   const { lang } = useUIStore();
   return (
     <a
-      href="https://wa.me/919999999999?text=🙏 Namaste! I want to know more about Vastu Arya services."
+      href="https://wa.me/917000343804?text=🙏 Namaste! I want to know more about Vastu Arya services."
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-btn"

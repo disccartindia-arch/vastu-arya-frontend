@@ -175,7 +175,7 @@ export default function ProductDetailPage() {
                   <ShoppingCart size={18} />
                   {added ? '✓ Added to Cart!' : product.stock > 0 ? (lang === 'en' ? 'Add to Cart' : 'कार्ट में जोड़ें') : 'Out of Stock'}
                 </button>
-                <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer"
+                <a href="https://wa.me/917000343804" target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 px-5 py-4 rounded-2xl font-bold text-sm bg-[#25D366] hover:bg-[#128C7E] text-white transition-all">
                   <MessageCircle size={18} /> Ask
                 </a>

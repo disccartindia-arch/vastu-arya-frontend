@@ -12,16 +12,16 @@ export default function ContactPage() {
   const { lang } = useUIStore();
   const [form, setForm] = useState({ name:'', email:'', phone:'', message:'' });
   const [sending, setSending] = useState(false);
-  const [contact, setContact] = useState({ phone: '+91-9999999999', email: 'contact@vastuarya.com', address: 'New Delhi, India', whatsapp: '919999999999' });
+  const [contact, setContact] = useState({ phone: '+91-7000343804', email: 'contact@vastuarya.com', address: 'New Delhi, India', whatsapp: '917000343804' });
 
   useEffect(() => {
     homepageSettingsAPI.get().then((r: any) => {
       const d = r?.data?.data;
       if (d) setContact({
-        phone: d.contactPhone || d.contactNumber || '+91-9999999999',
+        phone: d.contactPhone || d.contactNumber || '+91-7000343804',
         email: d.contactEmail || 'contact@vastuarya.com',
         address: d.contactAddress || 'New Delhi, India',
-        whatsapp: d.contactWhatsapp || '919999999999',
+        whatsapp: d.contactWhatsapp || '917000343804',
       });
     }).catch(() => {});
   }, []);
