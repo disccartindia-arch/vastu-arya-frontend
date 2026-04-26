@@ -175,3 +175,8 @@ export const aiSettingsAPI = {
 export const aiStatusAPI = {
   check: () => api.get('/ai/status'),
 };
+
+export const productGeneratorAPI = {
+  generate: (d: { input: string; category: string }) =>
+    api.post('/product-generator/generate', d),
+};

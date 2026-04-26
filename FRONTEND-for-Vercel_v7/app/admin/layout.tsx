@@ -33,10 +33,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  useEffect(() => {
     if (pathname === '/admin/login') return;
     if (!user) { router.push('/admin/login'); return; }
     if (!isAdmin()) { router.push('/'); }

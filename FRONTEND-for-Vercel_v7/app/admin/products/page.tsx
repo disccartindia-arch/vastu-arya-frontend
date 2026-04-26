@@ -118,9 +118,10 @@ export default function AdminProductsPage() {
           <button
             key={c.slug}
             onClick={() => { setCatFilter(c.slug); load(c.slug); }}
+            suppressHydrationWarning
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === c.slug ? 'bg-primary text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
           >
-            {c.emoji} {c.label}
+            <span suppressHydrationWarning>{c.emoji}</span> {c.label}
           </button>
         ))}
       </div>
