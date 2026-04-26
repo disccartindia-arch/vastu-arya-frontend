@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { blogsAPI } from '../../../lib/api';
 import { Plus, Pencil, Trash2, X, Save, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUploader from '../../../components/admin/ImageUploader';
 
 const emptyBlog = { title:{en:'',hi:''}, slug:'', content:{en:'',hi:''}, excerpt:{en:'',hi:''}, coverImage:'', category:'vastu', tags:[], author:'Dr. PPS', isPublished:false, seo:{title:'',description:''} };
 
@@ -85,7 +86,14 @@ export default function AdminBlogsPage() {
                   </select>
                 </div>
                 <div><label className="label-style">Author</label><input value={form.author} onChange={e=>setForm({...form,author:e.target.value})} className="input-style w-full"/></div>
-                <div className="sm:col-span-2"><label className="label-style">Cover Image URL</label><input value={form.coverImage} onChange={e=>setForm({...form,coverImage:e.target.value})} className="input-style w-full" placeholder="https://..."/></div>
+                <div className="sm:col-span-2">
+                  <ImageUploader
+                    images={form.coverImage ? [form.coverImage] : ['']}
+                    onChange={imgs => setForm({...form, coverImage: imgs[0] || ''})}
+                    maxImages={1}
+                    label="Cover Image"
+                  />
+                </div>
                 <div className="sm:col-span-2"><label className="label-style">Tags (comma separated)</label><input value={tagsInput} onChange={e=>setTagsInput(e.target.value)} className="input-style w-full" placeholder="vastu, astrology, tips"/></div>
               </div>
               <div><label className="label-style">Excerpt (English)</label><textarea value={form.excerpt.en} onChange={e=>setForm({...form,excerpt:{...form.excerpt,en:e.target.value}})} className="input-style w-full" rows={2} placeholder="Short description for listing pages"/></div>

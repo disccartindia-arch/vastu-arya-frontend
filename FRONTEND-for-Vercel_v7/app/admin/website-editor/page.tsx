@@ -9,6 +9,7 @@ import {
   Home, Star, Palette, Plus, Pencil, Trash2, X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUploader from '../../../components/admin/ImageUploader';
 
 // ─── Existing constants (unchanged) ──────────────────────────────────────────
 
@@ -802,7 +803,14 @@ export default function WebsiteEditorPage() {
                 </div>
               </div>
               <div><label className="label-style">Testimonial Text *</label><textarea value={tForm.text} onChange={e => setTForm((p: any) => ({ ...p, text: e.target.value }))} className="input-style w-full" rows={4} placeholder="What the customer said about Vastu Arya..." /></div>
-              <div><label className="label-style">Avatar Image URL (optional)</label><input value={tForm.avatar} onChange={e => setTForm((p: any) => ({ ...p, avatar: e.target.value }))} className="input-style w-full" placeholder="https://..." /></div>
+              <div>
+                  <ImageUploader
+                    images={tForm.avatar ? [tForm.avatar] : ['']}
+                    onChange={imgs => setTForm((p: any) => ({ ...p, avatar: imgs[0] || '' }))}
+                    maxImages={1}
+                    label="Testimonial Avatar Photo"
+                  />
+                </div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="label-style">Sort Order</label><input type="number" value={tForm.order} onChange={e => setTForm((p: any) => ({ ...p, order: +e.target.value }))} className="input-style w-full" /></div>
                 <div className="flex items-end pb-1"><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={tForm.isActive} onChange={e => setTForm((p: any) => ({ ...p, isActive: e.target.checked }))} className="w-4 h-4 accent-primary" /><span className="text-sm font-medium">Active / Visible</span></label></div>

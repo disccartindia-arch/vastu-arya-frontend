@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/authStore';
 import {
   LayoutDashboard, Package, ShoppingBag, Calendar, BookOpen,
   Users, Settings, ImageIcon, MessageSquare, LogOut, Menu, X,
-  Layers, ChevronRight, Globe, Sparkles, Rss
+  Layers, ChevronRight, Globe, Sparkles
 } from 'lucide-react';
 
 const navItems = [
@@ -18,7 +18,6 @@ const navItems = [
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
   { href: '/admin/blogs', label: 'Blogs', icon: BookOpen },
   { href: '/admin/users', label: 'Users', icon: Users },
-  { href: '/admin/social-posts', label: 'Vastu Feed', icon: Rss, badge: 'NEW' },
   { href: '/admin/slider', label: 'Slider', icon: ImageIcon },
   { href: '/admin/popups', label: 'Popups', icon: MessageSquare },
   { href: '/admin/settings', label: 'Settings', icon: Settings },

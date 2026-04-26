@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { settingsAPI } from '../../../lib/api';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUploader from '../../../components/admin/ImageUploader';
 
 const empty = { title:'', subtitle:'', image:'', ctaText:'Book Now', ctaLink:'/book-appointment', isActive:true, sortOrder:0 };
 
@@ -74,7 +75,14 @@ export default function AdminSliderPage() {
             <div className="p-5 space-y-4">
               <div><label className="label-style">Title *</label><input value={form.title} onChange={e=>setForm({...form,title:e.target.value})} className="input-style w-full" placeholder="Hero slide title"/></div>
               <div><label className="label-style">Subtitle</label><input value={form.subtitle} onChange={e=>setForm({...form,subtitle:e.target.value})} className="input-style w-full"/></div>
-              <div><label className="label-style">Image URL *</label><input value={form.image} onChange={e=>setForm({...form,image:e.target.value})} className="input-style w-full" placeholder="https://..."/></div>
+              <div>
+                <ImageUploader
+                  images={form.image ? [form.image] : ['']}
+                  onChange={imgs => setForm({...form, image: imgs[0] || ''})}
+                  maxImages={1}
+                  label="Slider Image *"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="label-style">CTA Button Text</label><input value={form.ctaText} onChange={e=>setForm({...form,ctaText:e.target.value})} className="input-style w-full"/></div>
                 <div><label className="label-style">CTA Link</label><input value={form.ctaLink} onChange={e=>setForm({...form,ctaLink:e.target.value})} className="input-style w-full"/></div>

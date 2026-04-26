@@ -139,16 +139,6 @@ export const themeSettingsAPI = {
   update: (d: any) => api.put('/homepage/theme', d),
 };
 
-// ─── Search ───────────────────────────────────────────────────────────────────
-export const searchAPI = {
-  search: (q: string, limit = 8) => api.get('/search', { params: { q, limit }, headers: typeof window !== 'undefined' ? { 'x-session-id': sessionStorage.getItem('va_search_session') || '' } : {} }),
-  trending: () => api.get('/search/trending'),
-  logClick: (query: string, clickedSlug: string, clickedType: string) =>
-    api.post('/search/log-click', { query, clickedSlug, clickedType }),
-  analytics: () => api.get('/search/analytics'),
-};
-
-// ─── Social Posts ─────────────────────────────────────────────────────────────
 export const postsAPI = {
   getAll: (p?: any) => api.get('/posts', { params: p }),
   getById: (id: string) => api.get(`/posts/${id}`),
@@ -159,10 +149,13 @@ export const postsAPI = {
   create: (d: any) => api.post('/posts', d),
   update: (id: string, d: any) => api.put(`/posts/${id}`, d),
   delete: (id: string) => api.delete(`/posts/${id}`),
-  deleteComment: (commentId: string) => api.delete(`/posts/comments/${commentId}`),
 };
 
-// ─── AI ───────────────────────────────────────────────────────────────────────
-export const aiAPI = {
-  vastuAnalysis: (d: any) => api.post('/ai/vastu-analysis', d),
+
+export const searchAPI = {
+  search: (q: string, limit = 8) => api.get('/search', { params: { q, limit } }),
+  trending: () => api.get('/search/trending'),
+  logClick: (query: string, clickedSlug: string, clickedType: string) =>
+    api.post('/search/log-click', { query, clickedSlug, clickedType }),
+  analytics: () => api.get('/search/analytics'),
 };
