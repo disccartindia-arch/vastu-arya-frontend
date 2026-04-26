@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/authStore';
 import {
   LayoutDashboard, Package, ShoppingBag, Calendar, BookOpen,
   Users, Settings, ImageIcon, MessageSquare, LogOut, Menu, X,
-  Layers, ChevronRight, Globe, Sparkles, Rss,
+  Layers, ChevronRight, Globe, Sparkles, Rss, Wand2,
 } from 'lucide-react';
 
 const navItems = [
@@ -15,7 +15,7 @@ const navItems = [
   { href: '/admin/ai-settings',    label: 'AI Vastu Settings',  icon: Sparkles,     badge: 'NEW' },
   { href: '/admin/services',       label: 'Services',           icon: Layers },
   { href: '/admin/products',          label: 'Products',           icon: Package },
-  { href: '/admin/product-generator', label: 'AI Product Gen',      icon: Sparkles },
+  { href: '/admin/product-generator', label: 'AI Product Gen',      icon: Wand2 },
   { href: '/admin/orders',         label: 'Orders',             icon: ShoppingBag },
   { href: '/admin/bookings',       label: 'Bookings',           icon: Calendar },
   { href: '/admin/blogs',          label: 'Blogs',              icon: BookOpen },
