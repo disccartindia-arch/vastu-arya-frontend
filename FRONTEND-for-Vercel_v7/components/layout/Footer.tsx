@@ -127,8 +127,8 @@ export default function Footer() {
             {lang === 'hi' ? '© 2024 वास्तु आर्या | IVAF प्रमाणित | भारत में बना' : fd.copyright}
           </p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="text-xs text-gray-600 hover:text-yellow-400 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="text-xs text-gray-600 hover:text-yellow-400 transition-colors">Terms</Link>
+            <Link href="/contact#privacy" className="text-xs text-gray-600 hover:text-yellow-400 transition-colors">Privacy Policy</Link>
+            <Link href="/contact#terms" className="text-xs text-gray-600 hover:text-yellow-400 transition-colors">Terms</Link>
           </div>
         </div>
       </div>
