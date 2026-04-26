@@ -43,7 +43,7 @@ export default function ProductGeneratorPage() {
   const [uploading,  setUploading]   = useState(false);
   const [product,    setProduct]     = useState<GenProduct | null>(null);
   const [showAdvanced, setShowAdv]   = useState(false);
-  const [showPreview,  setShowPrev]  = useState(false);
+  const [showPrev,  setShowPrev]  = useState(false);
   const [savedId,    setSavedId]     = useState<string | null>(null);
 
   /* ── Generate ── */
