@@ -94,6 +94,7 @@ export const adminAPI = {
   getDashboard: () => api.get('/admin/dashboard'),
   getUsers: (p?: any) => api.get('/admin/users', { params: p }),
   updateUser: (id: string, d: any) => api.put(`/admin/users/${id}`, d),
+  seedProducts: () => api.post('/admin/seed-products'),
 };
 
 export const contentAPI = {
