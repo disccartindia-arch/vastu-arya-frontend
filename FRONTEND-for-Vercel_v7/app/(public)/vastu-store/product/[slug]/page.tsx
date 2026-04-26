@@ -18,7 +18,7 @@ const STATIC_REVIEWS = [
   { name: 'Priya S.', city: 'Mumbai', rating: 5, text: 'Amazing product! The energy in my home has completely transformed. Highly recommended by my Vastu consultant too.', date: '2 days ago' },
   { name: 'Rahul M.', city: 'Delhi', rating: 5, text: 'Genuine product, beautifully packaged. I could feel the positive vibrations the moment I placed it in my pooja room.', date: '1 week ago' },
   { name: 'Anjali K.', city: 'Bangalore', rating: 4, text: 'Very happy with the quality. The crystal clarity is excellent. Fast delivery and well-wrapped.', date: '2 weeks ago' },
-  { name: 'Deepak R.', city: 'Pune', rating: 5, text: 'Bought this on the recommendation of Dr. PPS. Absolutely authentic and the positive change was noticeable within days.', date: '3 weeks ago' },
+  { name: 'Deepak R.', city: 'Pune', rating: 5, text: 'Bought this on the recommendation of Dr. PPS Tomar. Absolutely authentic and the positive change was noticeable within days.', date: '3 weeks ago' },
 ];
 
 const GUARANTEES = [
@@ -28,8 +28,8 @@ const GUARANTEES = [
 ];
 
 const STATIC_FAQ = [
-  { q: 'Is this product energised / activated?', a: 'Yes. All our products are energised using Vedic mantras and rituals before dispatch under the guidance of Dr. PPS.' },
-  { q: 'How do I place / use this product at home?', a: 'Detailed placement instructions are included with every order. You can also book a ₹11 consultation with Dr. PPS for personalised guidance.' },
+  { q: 'Is this product energised / activated?', a: 'Yes. All our products are energised using Vedic mantras and rituals before dispatch under the guidance of Dr. PPS Tomar.' },
+  { q: 'How do I place / use this product at home?', a: 'Detailed placement instructions are included with every order. You can also book a ₹11 consultation with Dr. PPS Tomar for personalised guidance.' },
   { q: 'Are these products suitable for gifting?', a: 'Absolutely. We offer premium gift packaging on request. Just leave a note at checkout.' },
   { q: 'What is the return / exchange policy?', a: 'We offer a 7-day exchange policy for damaged or defective items. Contact us on WhatsApp within 7 days of delivery.' },
 ];

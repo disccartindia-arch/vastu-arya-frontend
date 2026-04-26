@@ -41,7 +41,7 @@ export default function AppointmentPopup() {
       amount: 11,
       name,
       phone,
-      description: 'Book Appointment with Dr. PPS',
+      description: 'Book Appointment with Dr. PPS Tomar',
       type: 'booking',
       orderData: { name, phone, serviceName: 'Book Appointment', amount: 11 },
       onSuccess: (data: any) => {
@@ -66,7 +66,7 @@ export default function AppointmentPopup() {
             <img src="/logo.jpg" alt="Vastu Arya" className="w-full h-full object-cover" />
           </div>
           <h2 className="font-display text-xl font-bold text-white mb-1">{c('title', lang === 'en' ? 'Book Your Appointment' : 'अपॉइंटमेंट बुक करें')}</h2>
-          <p className="text-white/85 text-sm">{c('subtitle', lang === 'en' ? 'Connect with Dr. PPS on WhatsApp' : 'डॉ. PPS से WhatsApp पर जुड़ें')}</p>
+          <p className="text-white/85 text-sm">{c('subtitle', lang === 'en' ? 'Connect with Dr. PPS Tomar on WhatsApp' : 'डॉ. PPS से WhatsApp पर जुड़ें')}</p>
           <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}>
             <span style={{ color: '#FFE066' }}>&#9889;</span>
             {c('badge', lang === 'en' ? 'Only ₹11 — Limited Offer!' : 'केवल ₹11 — सीमित समय!')}

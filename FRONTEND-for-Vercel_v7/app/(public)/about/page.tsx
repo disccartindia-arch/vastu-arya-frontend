@@ -28,9 +28,9 @@ export default function AboutPage() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <span className="font-accent text-primary text-sm tracking-widest uppercase">Meet the Expert</span>
-                <h2 className="font-display text-3xl font-bold text-text-dark mt-2 mb-4">Dr. PPS — IVAF Certified Master</h2>
-                <p className="text-text-mid leading-relaxed mb-4">Dr. PPS is one of India's most respected Vastu Shastra experts, holding a prestigious Doctorate degree in Vastu Vadana. Awarded by the International Vedic Astrology Federation (IVAF LLC, USA) and recognized in New Delhi, Dr. PPS has transformed over 45,000 lives through authentic Vastu and Astrology guidance.</p>
-                <p className="text-text-mid leading-relaxed mb-6">With 15+ years of experience spanning residential Vastu, commercial properties, factory layouts, numerology, gemology, and astrology — Dr. PPS brings a scientific, evidence-based approach to ancient Vedic wisdom.</p>
+                <h2 className="font-display text-3xl font-bold text-text-dark mt-2 mb-4">Dr. PPS Tomar — IVAF Certified Master</h2>
+                <p className="text-text-mid leading-relaxed mb-4">Dr. PPS Tomar is one of India's most respected Vastu Shastra experts, holding a prestigious Doctorate degree in Vastu Vadana. Awarded by the International Vedic Astrology Federation (IVAF LLC, USA) and recognized in New Delhi, Dr. PPS Tomar has transformed over 45,000 lives through authentic Vastu and Astrology guidance.</p>
+                <p className="text-text-mid leading-relaxed mb-6">With 15+ years of experience spanning residential Vastu, commercial properties, factory layouts, numerology, gemology, and astrology — Dr. PPS Tomar brings a scientific, evidence-based approach to ancient Vedic wisdom.</p>
                 <div className="grid grid-cols-2 gap-4">
                   {[{n:'45,000+',l:'Happy Clients'},{n:'15+',l:'Years Experience'},{n:'100+',l:'Services Offered'},{n:'50+',l:'Cities Covered'}].map((s,i)=>(
                     <div key={i} className="bg-white rounded-2xl p-4 text-center border border-orange-100">

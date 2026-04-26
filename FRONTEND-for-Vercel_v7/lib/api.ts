@@ -165,3 +165,9 @@ export const aiAPI = {
   vastuAnalysis: (d: { concern: string; roomType?: string; direction?: string }) =>
     api.post('/ai/vastu-analysis', d),
 };
+
+export const aiSettingsAPI = {
+  get:    () => api.get('/ai-settings'),
+  update: (d: any) => api.put('/ai-settings', d),
+  reset:  () => api.post('/ai-settings/reset'),
+};

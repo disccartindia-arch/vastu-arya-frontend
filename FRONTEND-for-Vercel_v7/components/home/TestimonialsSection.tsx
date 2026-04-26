@@ -7,12 +7,12 @@ import { testimonialsAPI, contentAPI } from '../../lib/api';
 
 // Hardcoded fallback — used when no testimonials exist in database yet
 const FALLBACK = [
-  { _id: 'f1', name: 'Rajesh Kumar', city: 'New Delhi', service: 'Vastu Check', rating: 5, text: 'Dr. PPS transformed our home completely. After his Vastu analysis, we experienced positive changes in our business and family harmony within 2 months.', avatar: '' },
-  { _id: 'f2', name: 'Priya Sharma', city: 'Mumbai', service: 'Numerology Analysis', rating: 5, text: 'The numerology report was incredibly detailed. Dr. PPS identified issues I never knew existed and provided practical remedies that actually worked!', avatar: '' },
-  { _id: 'f3', name: 'Amit Patel', city: 'Ahmedabad', service: 'Smart Layout', rating: 5, text: 'Our new factory layout by Dr. PPS has shown remarkable improvements in productivity. The Vastu-compliant design truly makes a difference!', avatar: '' },
+  { _id: 'f1', name: 'Rajesh Kumar', city: 'New Delhi', service: 'Vastu Check', rating: 5, text: 'Dr. PPS Tomar transformed our home completely. After his Vastu analysis, we experienced positive changes in our business and family harmony within 2 months.', avatar: '' },
+  { _id: 'f2', name: 'Priya Sharma', city: 'Mumbai', service: 'Numerology Analysis', rating: 5, text: 'The numerology report was incredibly detailed. Dr. PPS Tomar identified issues I never knew existed and provided practical remedies that actually worked!', avatar: '' },
+  { _id: 'f3', name: 'Amit Patel', city: 'Ahmedabad', service: 'Smart Layout', rating: 5, text: 'Our new factory layout by Dr. PPS Tomar has shown remarkable improvements in productivity. The Vastu-compliant design truly makes a difference!', avatar: '' },
   { _id: 'f4', name: 'Sunita Reddy', city: 'Hyderabad', service: 'Mobile Numerology', rating: 5, text: 'Changed my mobile number as suggested. Within weeks, I noticed better communication, new opportunities, and overall positive energy in life!', avatar: '' },
-  { _id: 'f5', name: 'Vikram Singh', city: 'Jaipur', service: 'Book Appointment', rating: 5, text: 'Just ₹11 for WhatsApp consultation with an IVAF expert? Unbelievable value! Dr. PPS guided me on urgent Vastu issues immediately.', avatar: '' },
-  { _id: 'f6', name: 'Meera Krishnan', city: 'Chennai', service: 'Vastu Consultancy', rating: 5, text: 'The full consultancy package was worth every rupee. Dr. PPS is knowledgeable, patient, and truly cares about helping you improve your life.', avatar: '' },
+  { _id: 'f5', name: 'Vikram Singh', city: 'Jaipur', service: 'Book Appointment', rating: 5, text: 'Just ₹11 for WhatsApp consultation with an IVAF expert? Unbelievable value! Dr. PPS Tomar guided me on urgent Vastu issues immediately.', avatar: '' },
+  { _id: 'f6', name: 'Meera Krishnan', city: 'Chennai', service: 'Vastu Consultancy', rating: 5, text: 'The full consultancy package was worth every rupee. Dr. PPS Tomar is knowledgeable, patient, and truly cares about helping you improve your life.', avatar: '' },
 ];
 
 interface TestimonialItem {

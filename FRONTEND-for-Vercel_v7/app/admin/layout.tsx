@@ -6,12 +6,14 @@ import { useAuthStore } from '../../store/authStore';
 import {
   LayoutDashboard, Package, ShoppingBag, Calendar, BookOpen,
   Users, Settings, ImageIcon, MessageSquare, LogOut, Menu, X,
-  Layers, ChevronRight, Globe, Sparkles, Rss
+  Layers, ChevronRight, Globe, Sparkles, Rss, Brain, FileText
 } from 'lucide-react';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/website-editor', label: 'Website Editor', icon: Globe, badge: 'NEW' },
+  { href: '/admin/ai-settings', label: 'AI Vastu Settings', icon: Sparkles },
+  { href: '/admin/about', label: 'About Page', icon: FileText },
   { href: '/admin/services', label: 'Services', icon: Layers },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },

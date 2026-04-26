@@ -24,10 +24,10 @@ export default function VastuConsultancyPage() {
     const amount = payType === 'advance' ? 1100 : 11000;
     await initiateRazorpayPayment({
       amount, name: form.name, phone: form.phone, email: form.email,
-      description: `Vastu Consultancy by Dr. PPS - ${payType === 'advance' ? 'Advance' : 'Full Package'}`,
+      description: `Vastu Consultancy by Dr. PPS Tomar - ${payType === 'advance' ? 'Advance' : 'Full Package'}`,
       type: 'service',
-      orderData: { name:form.name, phone:form.phone, email:form.email, serviceName:'Vastu Consultancy by Dr. PPS', amount, formData:{payType} },
-      onSuccess: () => { setLoading(false); toast.success('🎉 Confirmed! Dr. PPS will call you within 24 hours.'); setShowForm(false); },
+      orderData: { name:form.name, phone:form.phone, email:form.email, serviceName:'Vastu Consultancy by Dr. PPS Tomar', amount, formData:{payType} },
+      onSuccess: () => { setLoading(false); toast.success('🎉 Confirmed! Dr. PPS Tomar will call you within 24 hours.'); setShowForm(false); },
       onFailure: () => setLoading(false),
     });
   };
@@ -42,10 +42,10 @@ export default function VastuConsultancyPage() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <span className="inline-block bg-gold/20 text-yellow-300 px-4 py-1.5 rounded-full text-sm font-semibold font-accent mb-4">🌟 Premium Consultation</span>
-                <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">One-on-One with Dr. PPS</h1>
-                <p className="text-gray-300 text-lg mb-6">The most comprehensive Vastu & Astrology consultation. Dr. PPS personally connects with you via video or phone call.</p>
+                <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">One-on-One with Dr. PPS Tomar</h1>
+                <p className="text-gray-300 text-lg mb-6">The most comprehensive Vastu & Astrology consultation. Dr. PPS Tomar personally connects with you via video or phone call.</p>
                 <div className="space-y-3 mb-8">
-                  {['Personal video/phone call with Dr. PPS','Complete Vastu analysis of your space','Astrology & gemology guidance included','Personalized remedies & solutions','Lifetime follow-up support'].map((f,i)=>(
+                  {['Personal video/phone call with Dr. PPS Tomar','Complete Vastu analysis of your space','Astrology & gemology guidance included','Personalized remedies & solutions','Lifetime follow-up support'].map((f,i)=>(
                     <div key={i} className="flex items-center gap-3"><CheckCircle size={18} className="text-green-400 flex-shrink-0"/><span className="text-gray-200 text-sm">{f}</span></div>
                   ))}
                 </div>
@@ -61,7 +61,7 @@ export default function VastuConsultancyPage() {
               <div className="hidden lg:block">
                 <div className="bg-white/10 border border-white/20 rounded-2xl p-6 backdrop-blur-sm">
                   <div className="w-20 h-20 bg-saffron-gradient rounded-full flex items-center justify-center text-white font-display font-bold text-2xl mx-auto mb-4">PPS</div>
-                  <h3 className="text-white font-display text-xl font-bold text-center mb-2">Dr. PPS</h3>
+                  <h3 className="text-white font-display text-xl font-bold text-center mb-2">Dr. PPS Tomar</h3>
                   <p className="text-primary text-sm text-center font-accent mb-4">IVAF Certified Vastu Expert</p>
                   {[{icon:Award, text:'International Vedic Astrology Federation (USA)'},{icon:Award, text:'Vastu Vadana Doctorate Degree'},{icon:Award, text:'Recognized in New Delhi'},{icon:Phone, text:'15+ Years of Expert Consultation'},{icon:Video, text:'1,000+ Video Consultations Done'}].map((c,i)=>(
                     <div key={i} className="flex items-center gap-2 py-1.5 border-b border-white/10 last:border-0">
@@ -91,7 +91,7 @@ export default function VastuConsultancyPage() {
                 <div className="absolute top-3 right-3 bg-gold text-white text-xs px-2 py-1 rounded-full font-bold">BEST VALUE</div>
                 <div className="text-3xl mb-3">🌟</div>
                 <h3 className="font-display font-bold text-xl mb-1">Full Package</h3>
-                <p className="text-text-light text-sm mb-4">Complete access to all Dr. PPS services</p>
+                <p className="text-text-light text-sm mb-4">Complete access to all Dr. PPS Tomar services</p>
                 <div className="text-3xl font-display font-bold text-primary">₹11,000</div>
                 <button onClick={()=>{setPayType('full');setShowForm(true);}} className="w-full mt-4 bg-gold hover:bg-yellow-600 text-white py-3 rounded-xl font-bold transition-all">Get Full Package</button>
               </div>

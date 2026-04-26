@@ -91,7 +91,7 @@ const TABS: { id: TabId; label: string; icon: any }[] = [
 const DEFAULT_HP = {
   contactNumber: '+91-9999999999',
   heroHeading: 'Transform Your Space, Transform Your Life',
-  heroSubheading: "India's Premier Vastu Shastra & Astrology Platform by Dr. PPS",
+  heroSubheading: "India's Premier Vastu Shastra & Astrology Platform by Dr. PPS Tomar",
   cta1Text: 'Book Appointment @ ₹11',
   cta1Link: '/book-appointment',
   cta2Text: 'Explore Vastu Store',
@@ -495,7 +495,7 @@ export default function WebsiteEditorPage() {
               </div>
               <div className="sm:col-span-2">
                 <label className="label-style">Hero Subheading</label>
-                <input value={homepageSettings.heroSubheading} onChange={e => setHomepageSettings((p: any) => ({ ...p, heroSubheading: e.target.value }))} className="input-style" placeholder="India's Premier Vastu Shastra & Astrology Platform by Dr. PPS" />
+                <input value={homepageSettings.heroSubheading} onChange={e => setHomepageSettings((p: any) => ({ ...p, heroSubheading: e.target.value }))} className="input-style" placeholder="India's Premier Vastu Shastra & Astrology Platform by Dr. PPS Tomar" />
               </div>
               <div>
                 <label className="label-style">CTA Button 1 Text</label>

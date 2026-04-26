@@ -21,9 +21,9 @@ const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0
 
 const WHY_CARDS = [
   { icon: Award, title: 'IVAF Certified Expert', desc: 'International Vedic Astrology Federation certified — globally recognized from USA' },
-  { icon: TrendingUp, title: 'Vastu Vadana Doctorate', desc: 'Dr. PPS holds a doctorate degree in Vastu Shastra from a prestigious institute' },
+  { icon: TrendingUp, title: 'Vastu Vadana Doctorate', desc: 'Dr. PPS Tomar holds a doctorate degree in Vastu Shastra from a prestigious institute' },
   { icon: CheckCircle, title: '45,000+ Happy Clients', desc: 'Transforming lives across India and worldwide with authentic Vastu solutions' },
-  { icon: Phone, title: 'WhatsApp Connect', desc: 'Direct access to Dr. PPS for urgent consultations at just ₹11' },
+  { icon: Phone, title: 'WhatsApp Connect', desc: 'Direct access to Dr. PPS Tomar for urgent consultations at just ₹11' },
   { icon: Star, title: 'Government Recognized', desc: 'New Delhi awarded, media featured, government recognized Vastu expert' },
   { icon: CheckCircle, title: 'Proven Results', desc: '15+ years of results with scientific Vastu methodology and astrology' },
 ];
@@ -182,7 +182,7 @@ export default function HomePage() {
                 {c('cta', 'title', lang === 'en' ? 'Transform Your Life Today' : 'आज अपना जीवन बदलें')}
               </h2>
               <p className="text-gray-300 text-lg mb-8">
-                {c('cta', 'subtitle', lang === 'en' ? 'Connect with Dr. PPS on WhatsApp. Only ₹11.' : 'डॉ. PPS से WhatsApp पर जुड़ें। केवल ₹11।')}
+                {c('cta', 'subtitle', lang === 'en' ? 'Connect with Dr. PPS Tomar on WhatsApp. Only ₹11.' : 'डॉ. PPS से WhatsApp पर जुड़ें। केवल ₹11।')}
               </p>
               <button onClick={() => setShowAppointmentPopup(true)}
                 className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl font-bold text-lg transition-all text-white animate-pulse-orange"

@@ -119,7 +119,7 @@ function PostCard({ post, sessionId }: { post: any; sessionId: string }) {
   const handleShare = async () => {
     const url = `${window.location.origin}/vastu-feed#${post._id}`;
     if (navigator.share) {
-      try { await navigator.share({ title: 'Vastu tip by Dr. PPS', text: post.caption?.slice(0, 100), url }); } catch {}
+      try { await navigator.share({ title: 'Vastu tip by Dr. PPS Tomar', text: post.caption?.slice(0, 100), url }); } catch {}
     } else {
       navigator.clipboard.writeText(url).then(() => toast.success('Link copied!')).catch(() => {});
     }
@@ -146,10 +146,10 @@ function PostCard({ post, sessionId }: { post: any; sessionId: string }) {
       <div className="flex items-center gap-3 p-4">
         <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-200 flex-shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.jpg" alt="Dr. PPS" className="w-full h-full object-cover" />
+          <img src="/logo.jpg" alt="Dr. PPS Tomar" className="w-full h-full object-cover" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-gray-800 text-sm">{post.author || 'Dr. PPS'}</p>
+          <p className="font-bold text-gray-800 text-sm">{post.author || 'Dr. PPS Tomar'}</p>
           <div className="flex items-center gap-2 text-xs text-gray-400 flex-wrap">
             {post.location && (
               <span className="flex items-center gap-0.5">
@@ -388,7 +388,7 @@ export default function VastuFeedPage() {
               transition={{ delay: 0.2 }}
               className="text-gray-400 text-sm"
             >
-              Daily Vastu tips, real transformations and sacred wisdom by Dr. PPS
+              Daily Vastu tips, real transformations and sacred wisdom by Dr. PPS Tomar
             </motion.p>
           </div>
         </section>

@@ -36,7 +36,7 @@ export default function ServicesPage() {
           <div className="absolute inset-0 mandala-bg opacity-10" />
           <div className="relative">
             <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-3">{lang === 'en' ? 'Our Services' : 'हमारी सेवाएं'}</h1>
-            <p className="text-gray-300 mb-6">{lang === 'en' ? '100+ services by IVAF Certified Expert Dr. PPS' : 'IVAF प्रमाणित विशेषज्ञ डॉ. PPS द्वारा 100+ सेवाएं'}</p>
+            <p className="text-gray-300 mb-6">{lang === 'en' ? '100+ services by IVAF Certified Expert Dr. PPS Tomar' : 'IVAF प्रमाणित विशेषज्ञ डॉ. PPS द्वारा 100+ सेवाएं'}</p>
             <div className="max-w-md mx-auto relative px-4">
               <Search size={18} className="absolute left-7 top-1/2 -translate-y-1/2 text-gray-400" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder={lang === 'en' ? 'Search services...' : 'सेवाएं खोजें...'} className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-primary" />

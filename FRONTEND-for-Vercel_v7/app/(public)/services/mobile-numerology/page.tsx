@@ -22,9 +22,9 @@ const features = [
 ];
 
 const faqs = [
-  { q: 'How does mobile number numerology work?', a: 'Every number carries a specific vibration and energy. Your mobile number, being in constant use, directly influences your aura, relationships, and opportunities. Dr. PPS analyzes the numeric values using ancient Vedic numerology principles.' },
+  { q: 'How does mobile number numerology work?', a: 'Every number carries a specific vibration and energy. Your mobile number, being in constant use, directly influences your aura, relationships, and opportunities. Dr. PPS Tomar analyzes the numeric values using ancient Vedic numerology principles.' },
   { q: 'How will I receive my report?', a: 'Your detailed PDF report will be emailed to you within 24-48 hours of booking. The report includes all findings, lucky remedies, and personalized guidance.' },
-  { q: 'What if my number is unfavorable?', a: 'Dr. PPS provides specific remedies such as recommended number changes, mantras, or complementary numbers to add to offset negative effects.' },
+  { q: 'What if my number is unfavorable?', a: 'Dr. PPS Tomar provides specific remedies such as recommended number changes, mantras, or complementary numbers to add to offset negative effects.' },
   { q: 'Do I need to change my number?', a: 'Not necessarily. The report will first confirm whether your number needs changing. Many numbers can be remedied without switching.' },
 ];
 
@@ -62,7 +62,7 @@ export default function MobileNumerologyPage() {
               <div>
                 <span className="inline-block bg-primary/20 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-4">📱 Numerology Service</span>
                 <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">Is Your Mobile Number Lucky For You?</h1>
-                <p className="text-gray-300 text-lg mb-6">Get a detailed expert analysis by Dr. PPS (IVAF Certified). Know if your number brings fortune or holds you back.</p>
+                <p className="text-gray-300 text-lg mb-6">Get a detailed expert analysis by Dr. PPS Tomar (IVAF Certified). Know if your number brings fortune or holds you back.</p>
                 <PriceDisplay original={999} offer={199} size="lg" />
                 <p className="text-green-400 text-sm mt-2 mb-6">⚡ 80% OFF — Limited Time Offer!</p>
                 <button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-orange-lg">
@@ -97,7 +97,7 @@ export default function MobileNumerologyPage() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 className="font-display text-3xl font-bold text-text-dark mb-10">How It Works</h2>
             <div className="grid sm:grid-cols-3 gap-6">
-              {[{ step: '1', icon: <Phone size={28} />, title: 'Share Your Number', desc: 'Book and share the mobile number to be analyzed' }, { step: '2', icon: <Zap size={28} />, title: 'Expert Analysis', desc: 'Dr. PPS personally analyzes using Vedic numerology' }, { step: '3', icon: <FileText size={28} />, title: 'Receive Report', desc: 'Get detailed PDF report in your email within 48 hours' }].map((s, i) => (
+              {[{ step: '1', icon: <Phone size={28} />, title: 'Share Your Number', desc: 'Book and share the mobile number to be analyzed' }, { step: '2', icon: <Zap size={28} />, title: 'Expert Analysis', desc: 'Dr. PPS Tomar personally analyzes using Vedic numerology' }, { step: '3', icon: <FileText size={28} />, title: 'Receive Report', desc: 'Get detailed PDF report in your email within 48 hours' }].map((s, i) => (
                 <div key={i} className="flex flex-col items-center">
                   <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-3">{s.icon}</div>
                   <div className="w-6 h-6 bg-primary rounded-full text-white text-xs font-bold flex items-center justify-center mb-2">{s.step}</div>
@@ -129,7 +129,7 @@ export default function MobileNumerologyPage() {
         {/* CTA */}
         <section className="py-16 bg-saffron-gradient text-center">
           <h2 className="font-display text-3xl font-bold text-white mb-3">Ready to Find Your Lucky Number?</h2>
-          <p className="text-white/90 mb-6">Get expert analysis by IVAF Certified Dr. PPS</p>
+          <p className="text-white/90 mb-6">Get expert analysis by IVAF Certified Dr. PPS Tomar</p>
           <PriceDisplay original={999} offer={199} size="lg" />
           <button onClick={() => setShowForm(true)} className="mt-4 bg-white text-primary hover:bg-cream px-10 py-4 rounded-2xl font-bold text-lg transition-all shadow-lg">
             📱 Book Analysis @ ₹199

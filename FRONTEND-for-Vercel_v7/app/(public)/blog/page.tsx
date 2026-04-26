@@ -22,7 +22,7 @@ export default function BlogPage() {
       <main>
         <section className="bg-dark-gradient py-16 text-center relative">
           <div className="absolute inset-0 mandala-bg opacity-10"/>
-          <div className="relative"><h1 className="font-display text-4xl font-bold text-white mb-2">{lang==='en'?'Vastu & Astrology Blog':'वास्तु और ज्योतिष ब्लॉग'}</h1><p className="text-gray-300">Expert insights by Dr. PPS</p></div>
+          <div className="relative"><h1 className="font-display text-4xl font-bold text-white mb-2">{lang==='en'?'Vastu & Astrology Blog':'वास्तु और ज्योतिष ब्लॉग'}</h1><p className="text-gray-300">Expert insights by Dr. PPS Tomar</p></div>
         </section>
         <section className="py-16 bg-cream">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">

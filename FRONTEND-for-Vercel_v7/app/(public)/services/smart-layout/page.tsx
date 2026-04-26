@@ -31,10 +31,10 @@ export default function SmartLayoutPage() {
     setLoading(true);
     await initiateRazorpayPayment({
       amount: 1100, name: form.name, phone: form.phone, email: form.email,
-      description: 'Smart Layout Plan by Dr. PPS',
+      description: 'Smart Layout Plan by Dr. PPS Tomar',
       type: 'service',
       orderData: { name: form.name, phone: form.phone, email: form.email, serviceName: 'Smart Layout Plan', amount: 1100, formData: form },
-      onSuccess: () => { setLoading(false); toast.success('🎉 Confirmed! Dr. PPS will deliver your layout within 72 hours.'); setShowForm(false); },
+      onSuccess: () => { setLoading(false); toast.success('🎉 Confirmed! Dr. PPS Tomar will deliver your layout within 72 hours.'); setShowForm(false); },
       onFailure: () => setLoading(false),
     });
   };
@@ -50,7 +50,7 @@ export default function SmartLayoutPage() {
               <div>
                 <span className="inline-block bg-green-500/20 text-green-300 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">🏗️ 78% OFF — Limited Time</span>
                 <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">Professional Smart Layout Plan</h1>
-                <p className="text-gray-300 text-lg mb-4">Get a complete Vastu-compliant floor plan by IVAF Certified Dr. PPS — for your home, flat, office, or factory plot.</p>
+                <p className="text-gray-300 text-lg mb-4">Get a complete Vastu-compliant floor plan by IVAF Certified Dr. PPS Tomar — for your home, flat, office, or factory plot.</p>
                 <PriceDisplay original={5100} offer={1100} size="lg" />
                 <p className="text-yellow-400 text-sm mt-1 mb-6">⚡ Save ₹4,000 — Offer ends soon!</p>
                 <div className="space-y-2 mb-6">

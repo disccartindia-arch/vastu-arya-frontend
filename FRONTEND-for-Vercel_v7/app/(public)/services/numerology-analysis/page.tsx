@@ -54,7 +54,7 @@ export default function NumerologyAnalysisPage() {
               <div>
                 <span className="inline-block bg-primary/20 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-4">🔢 Numerology Service</span>
                 <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">Unlock Your Numerological Blueprint</h1>
-                <p className="text-gray-300 text-lg mb-6">Get a comprehensive numerological profile by IVAF Certified Dr. PPS revealing your lucky numbers, planetary influences, and precise remedies.</p>
+                <p className="text-gray-300 text-lg mb-6">Get a comprehensive numerological profile by IVAF Certified Dr. PPS Tomar revealing your lucky numbers, planetary influences, and precise remedies.</p>
                 <PriceDisplay original={999} offer={499} size="lg" />
                 <p className="text-green-400 text-sm mt-2 mb-6">⚡ 50% OFF — Limited Time Offer!</p>
                 <button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-orange-lg">

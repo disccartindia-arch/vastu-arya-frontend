@@ -65,7 +65,7 @@ export default function HeroSection({ onBookClick, settings, heroBgTheme: propTh
 
   // Content — from settings prop (admin-configured) or language fallbacks
   const heroHeading = settings?.heroHeading || (lang === 'hi' ? 'अपना वास्तु बदलें, अपना जीवन बदलें' : 'Transform Your Space, Transform Your Life');
-  const heroSubheading = settings?.heroSubheading || (lang === 'hi' ? 'डॉ. PPS द्वारा भारत का प्रमुख वास्तु शास्त्र और ज्योतिष प्लेटफॉर्म' : "India's Premier Vastu Shastra & Astrology Platform by Dr. PPS");
+  const heroSubheading = settings?.heroSubheading || (lang === 'hi' ? 'डॉ. PPS द्वारा भारत का प्रमुख वास्तु शास्त्र और ज्योतिष प्लेटफॉर्म' : "India's Premier Vastu Shastra & Astrology Platform by Dr. PPS Tomar");
   const cta1Text = settings?.cta1Text || (lang === 'hi' ? '📅 ₹11 में अपॉइंटमेंट बुक करें' : '📅 Book Appointment @ ₹11');
   const cta1Link = settings?.cta1Link || '/book-appointment';
   const cta2Text = settings?.cta2Text || (lang === 'hi' ? '🙏 वास्तु स्टोर देखें' : '🙏 Explore Vastu Store');

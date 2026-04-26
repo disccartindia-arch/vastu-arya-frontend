@@ -5,11 +5,11 @@ import LuxuryBackground from '../components/ui/LuxuryBackground';
 
 export const metadata: Metadata = {
   title: 'Vastu Arya - Premium Vastu & Astrology Consultancy | IVAF Certified',
-  description: "India's premier Vastu Shastra, Astrology, Numerology consultation platform by Dr. PPS - IVAF Certified Expert. 45,000+ Happy Clients. Book at just ₹11.",
+  description: "India's premier Vastu Shastra, Astrology, Numerology consultation platform by Dr. PPS Tomar - IVAF Certified Expert. 45,000+ Happy Clients. Book at just ₹11.",
   keywords: 'vastu shastra, vastu expert, vastu arya, astrology, numerology, Dr PPS, IVAF certified, vastu consultation India',
   openGraph: {
     title: 'Vastu Arya - Transform Your Space, Transform Your Life',
-    description: "India's premier Vastu & Astrology platform by IVAF Certified Expert Dr. PPS. 45,000+ Happy Clients.",
+    description: "India's premier Vastu & Astrology platform by IVAF Certified Expert Dr. PPS Tomar. 45,000+ Happy Clients.",
     type: 'website',
     siteName: 'Vastu Arya',
     locale: 'en_IN',
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           "name": "Vastu Arya",
-          "description": "India's premier Vastu Shastra & Astrology platform by Dr. PPS",
+          "description": "India's premier Vastu Shastra & Astrology platform by Dr. PPS Tomar",
           "url": "https://vastuarya.com",
           "telephone": "+91-9999999999",
           "address": { "@type": "PostalAddress", "addressLocality": "New Delhi", "addressCountry": "IN" },

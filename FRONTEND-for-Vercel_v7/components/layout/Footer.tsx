@@ -45,7 +45,7 @@ export default function Footer() {
           </div>
           <p className="text-sm leading-relaxed mb-4 text-gray-500">
             {lang === 'en'
-              ? "India's premier Vastu Shastra & Astrology platform by IVAF Certified Expert Dr. PPS. 45,000+ Happy Clients."
+              ? "India's premier Vastu Shastra & Astrology platform by IVAF Certified Expert Dr. PPS Tomar. 45,000+ Happy Clients."
               : 'IVAF प्रमाणित विशेषज्ञ डॉ. PPS द्वारा भारत का प्रमुख वास्तु और ज्योतिष प्लेटफॉर्म।'}
           </p>
           <div className="flex gap-2">
@@ -69,7 +69,7 @@ export default function Footer() {
               ['/mobile-numerology', lang === 'en' ? 'Mobile Numerology' : 'मोबाइल नंबर ज्योतिष'],
               ['/vastu-check', lang === 'en' ? 'Vastu Check' : 'वास्तु जांच'],
               ['/smart-layout', lang === 'en' ? 'Smart Layout Plan' : 'स्मार्ट लेआउट प्लान'],
-              ['/vastu-consultancy', lang === 'en' ? 'Dr. PPS Consultancy' : 'डॉ. PPS परामर्श'],
+              ['/vastu-consultancy', lang === 'en' ? 'Dr. PPS Tomar Consultancy' : 'डॉ. PPS परामर्श'],
             ].map(([slug, label]) => (
               <li key={slug}>
                 <Link href={`/services${slug}`} className="text-sm transition-colors hover:text-yellow-400" style={{ color: '#6B7280' }}>{label}</Link>

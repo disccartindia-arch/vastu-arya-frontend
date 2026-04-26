@@ -37,7 +37,7 @@ export default function VastuCheckPage() {
       description: 'Vastu Check & Assistant Service',
       type: 'service',
       orderData: { name:form.name, phone:form.phone, email:form.email, serviceName:'Vastu Check & Assistant', amount:5100, formData:form },
-      onSuccess: () => { setLoading(false); toast.success('🎉 Booking confirmed! Dr. PPS will contact you within 24 hours.'); setShowForm(false); },
+      onSuccess: () => { setLoading(false); toast.success('🎉 Booking confirmed! Dr. PPS Tomar will contact you within 24 hours.'); setShowForm(false); },
       onFailure: () => setLoading(false),
     });
   };
@@ -53,7 +53,7 @@ export default function VastuCheckPage() {
               <div>
                 <span className="inline-block bg-red-500/20 text-red-300 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">🔥 90% OFF — Limited Period</span>
                 <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">Complete Vastu Check & Assistant</h1>
-                <p className="text-gray-300 text-lg mb-4">India's most comprehensive Vastu analysis by IVAF Certified Dr. PPS. 8+ specialized services in one package.</p>
+                <p className="text-gray-300 text-lg mb-4">India's most comprehensive Vastu analysis by IVAF Certified Dr. PPS Tomar. 8+ specialized services in one package.</p>
                 <PriceDisplay original={51000} offer={5100} size="lg" />
                 <p className="text-yellow-400 text-sm mt-1 mb-6">⚡ Save ₹45,900 — Offer ends soon!</p>
                 <div className="flex gap-3">

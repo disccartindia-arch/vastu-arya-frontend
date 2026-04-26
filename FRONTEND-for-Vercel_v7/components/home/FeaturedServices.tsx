@@ -20,7 +20,7 @@ export default function FeaturedServices({ services, onBookAppointment, services
             {lang === 'en' ? 'Premier Consultation Services' : 'प्रमुख परामर्श सेवाएं'}
           </h2>
           <p className="text-text-light max-w-xl mx-auto">
-            {lang === 'en' ? 'Expert consultations by IVAF Certified Dr. PPS — 15+ years of transforming lives' : 'IVAF प्रमाणित डॉ. PPS द्वारा विशेषज्ञ परामर्श'}
+            {lang === 'en' ? 'Expert consultations by IVAF Certified Dr. PPS Tomar — 15+ years of transforming lives' : 'IVAF प्रमाणित डॉ. PPS द्वारा विशेषज्ञ परामर्श'}
           </p>
         </motion.div>
 

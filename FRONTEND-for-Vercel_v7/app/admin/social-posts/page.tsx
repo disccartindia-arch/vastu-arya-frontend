@@ -17,7 +17,7 @@ const emptyPost = {
   category: 'vastu-tip',
   isFeatured: false,
   isPublished: true,
-  author: 'Dr. PPS',
+  author: 'Dr. PPS Tomar',
 };
 
 export default function AdminSocialPostsPage() {
@@ -217,7 +217,7 @@ export default function AdminSocialPostsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="label-style">Author</label>
-                  <input value={form.author} onChange={e => setForm({ ...form, author: e.target.value })} className="input-style w-full" placeholder="Dr. PPS" />
+                  <input value={form.author} onChange={e => setForm({ ...form, author: e.target.value })} className="input-style w-full" placeholder="Dr. PPS Tomar" />
                 </div>
                 <div>
                   <label className="label-style">Location (optional)</label>

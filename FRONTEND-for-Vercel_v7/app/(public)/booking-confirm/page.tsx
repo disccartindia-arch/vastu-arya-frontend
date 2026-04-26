@@ -26,7 +26,7 @@ function BookingContent() {
 
   const isConfirmed = !!refParam;
 
-  const waMsg = `🙏 Namaste Dr. PPS!\n\nI want to confirm my Vastu consultation booking.\n\nName: ${name}\nPhone: ${phone}\nRef: ${bookingRef}\n\nPlease confirm my appointment @ ₹11.`;
+  const waMsg = `🙏 Namaste Dr. PPS Tomar!\n\nI want to confirm my Vastu consultation booking.\n\nName: ${name}\nPhone: ${phone}\nRef: ${bookingRef}\n\nPlease confirm my appointment @ ₹11.`;
   const waUrl = `https://wa.me/919999999999?text=${encodeURIComponent(waMsg)}`;
 
   const copyRef = () => {
@@ -72,7 +72,7 @@ function BookingContent() {
           </h1>
           <p className="text-gray-600 text-base leading-relaxed">
             {isConfirmed
-              ? 'Your appointment with Dr. PPS is confirmed. We will contact you shortly.'
+              ? 'Your appointment with Dr. PPS Tomar is confirmed. We will contact you shortly.'
               : 'Your consultation request has been received. Complete the booking below.'}
           </p>
         </motion.div>
@@ -110,7 +110,7 @@ function BookingContent() {
         >
           {[
             { icon: Shield, label: '100% Secure', sub: 'Encrypted' },
-            { icon: Clock, label: '24hr Response', sub: 'Dr. PPS calls you' },
+            { icon: Clock, label: '24hr Response', sub: 'Dr. PPS Tomar calls you' },
             { icon: Award, label: 'IVAF Certified', sub: 'Verified expert' },
           ].map((t, i) => (
             <div
@@ -134,7 +134,7 @@ function BookingContent() {
           style={{ border: '1px solid rgba(212,160,23,0.22)' }}
         >
           <h2 className="font-display font-bold text-lg mb-0.5" style={{ color: '#1A0A00' }}>
-            {isConfirmed ? 'Connect with Dr. PPS' : 'Complete Your Booking — Only ₹11'}
+            {isConfirmed ? 'Connect with Dr. PPS Tomar' : 'Complete Your Booking — Only ₹11'}
           </h2>
           <p className="text-sm text-gray-500 mb-5">
             {isConfirmed
@@ -155,7 +155,7 @@ function BookingContent() {
             </div>
             <div className="flex-1 text-left">
               <p className="font-bold text-base">Book via WhatsApp</p>
-              <p className="text-sm opacity-90">Connect with Dr. PPS instantly — fastest & easiest</p>
+              <p className="text-sm opacity-90">Connect with Dr. PPS Tomar instantly — fastest & easiest</p>
             </div>
             <span className="text-xs bg-white/25 px-2.5 py-1 rounded-full font-bold flex-shrink-0">
               RECOMMENDED
@@ -223,9 +223,9 @@ function BookingContent() {
             What happens next?
           </h3>
           {[
-            "Dr. PPS's team will contact you within 24 hours on your registered phone.",
+            "Dr. PPS Tomar's team will contact you within 24 hours on your registered phone.",
             'You\'ll receive personalised Vastu guidance directly on WhatsApp.',
-            '45,000+ clients have trusted Dr. PPS — 100% satisfaction guaranteed.',
+            '45,000+ clients have trusted Dr. PPS Tomar — 100% satisfaction guaranteed.',
           ].map((step, i) => (
             <div key={i} className="flex items-start gap-2.5 mb-2.5 last:mb-0">
               <div

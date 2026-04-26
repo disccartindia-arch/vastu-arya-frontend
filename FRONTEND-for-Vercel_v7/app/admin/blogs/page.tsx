@@ -5,7 +5,7 @@ import { Plus, Pencil, Trash2, X, Save, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ImageUploader from '../../../components/admin/ImageUploader';
 
-const emptyBlog = { title:{en:'',hi:''}, slug:'', content:{en:'',hi:''}, excerpt:{en:'',hi:''}, coverImage:'', category:'vastu', tags:[], author:'Dr. PPS', isPublished:false, seo:{title:'',description:''} };
+const emptyBlog = { title:{en:'',hi:''}, slug:'', content:{en:'',hi:''}, excerpt:{en:'',hi:''}, coverImage:'', category:'vastu', tags:[], author:'Dr. PPS Tomar', isPublished:false, seo:{title:'',description:''} };
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<any[]>([]);
