@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { servicesAPI } from '../../../lib/api';
+import { servicesAPI, adminAPI } from '../../../lib/api';
 import { Service } from '../../../types';
 import { formatPrice } from '../../../lib/utils';
 import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save } from 'lucide-react';
@@ -21,9 +21,22 @@ export default function AdminServicesPage() {
   const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState<any>(emptyService);
   const [saving, setSaving] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
   const load = () => servicesAPI.getAll().then(r => setServices(r.data.data || [])).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
+
+  const handleSeed = async () => {
+    if (!confirm('This will seed all default services (skips any that already exist). Continue?')) return;
+    setSeeding(true);
+    try {
+      const { data } = await adminAPI.seedServices();
+      toast.success(data.message || 'Services seeded!');
+      load();
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message || 'Seed failed — check backend is deployed');
+    } finally { setSeeding(false); }
+  };
 
   const openAdd = () => { setEditing(null); setForm(emptyService); setShowModal(true); };
   const openEdit = (s: Service) => { setEditing(s); setForm({ ...s }); setShowModal(true); };
@@ -53,7 +66,12 @@ export default function AdminServicesPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div><h1 className="font-display text-2xl font-bold text-gray-800">Services</h1><p className="text-gray-500 text-sm">Manage all consultation services</p></div>
-        <button onClick={openAdd} className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-orange">
+        <div className="flex gap-2 flex-wrap">
+          <button onClick={handleSeed} disabled={seeding}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-60">
+            {seeding ? '⏳ Seeding…' : '🌿 Seed Default Services'}
+          </button>
+          <button onClick={openAdd} className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-orange">
           <Plus size={16} /> Add Service
         </button>
       </div>
