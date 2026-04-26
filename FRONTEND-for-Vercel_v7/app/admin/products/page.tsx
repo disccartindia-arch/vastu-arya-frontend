@@ -7,6 +7,7 @@ import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { STORE_CATEGORIES } from '../../../lib/utils';
 import ImageUploader from '../../../components/admin/ImageUploader';
+import CloudinaryStatus from '../../../components/admin/CloudinaryStatus';
 
 const emptyProduct = {
   name: { en: '', hi: '' }, slug: '', category: 'divine-frames',
@@ -108,6 +109,7 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
+      <CloudinaryStatus />
       {/* Category filter */}
       <div className="flex gap-2 flex-wrap">
         <button

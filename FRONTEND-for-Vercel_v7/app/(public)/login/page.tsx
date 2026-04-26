@@ -6,7 +6,6 @@ import Footer from '../../../components/layout/Footer';
 import { useAuthStore } from '../../../store/authStore';
 import { authAPI } from '../../../lib/api';
 import toast from 'react-hot-toast';
-import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,9 +49,6 @@ export default function LoginPage() {
               {loading?'Please wait...':(isLogin?'Sign In':'Create Account')}
             </button>
           </form>
-          <p className="text-center text-xs text-gray-400 mt-4">
-            Admin? <Link href="/admin/login" className="text-primary hover:underline">Admin Login →</Link>
-          </p>
         </div>
       </main>
       <Footer />

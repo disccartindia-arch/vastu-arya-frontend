@@ -111,6 +111,7 @@ export const configAPI = {
 };
 
 export const uploadAPI = {
+  status: () => api.get('/upload/status'),
   single: (fd: FormData) => api.post('/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
 };
 
