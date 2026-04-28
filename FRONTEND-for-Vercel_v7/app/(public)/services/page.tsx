@@ -5,6 +5,7 @@ import Footer from '../../../components/layout/Footer';
 import AppointmentPopup from '../../../components/common/AppointmentPopup';
 import CartDrawer from '../../../components/common/CartDrawer';
 import WhatsAppButton from '../../../components/common/WhatsAppButton';
+import VastuAIGuide from '../../../components/common/VastuAIGuide';
 import PriceDisplay from '../../../components/common/PriceDisplay';
 import { useUIStore } from '../../../store/uiStore';
 import { servicesAPI } from '../../../lib/api';
@@ -90,6 +91,7 @@ export default function ServicesPage() {
       <AppointmentPopup />
       <CartDrawer />
       <WhatsAppButton />
+      <VastuAIGuide />
     </>
   );
 }

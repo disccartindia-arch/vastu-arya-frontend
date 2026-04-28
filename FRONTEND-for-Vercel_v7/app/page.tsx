@@ -8,6 +8,7 @@ import TestimonialsSection from '../components/home/TestimonialsSection';
 import AppointmentPopup from '../components/common/AppointmentPopup';
 import CartDrawer from '../components/common/CartDrawer';
 import WhatsAppButton from '../components/common/WhatsAppButton';
+import VastuAIGuide from '../components/common/VastuAIGuide';
 import ProductCard from '../components/store/ProductCard';
 import { useUIStore } from '../store/uiStore';
 import { servicesAPI, productsAPI, contentAPI, configAPI, homepageSettingsAPI } from '../lib/api';
@@ -202,6 +203,7 @@ export default function HomePage() {
       <AppointmentPopup />
       <CartDrawer />
       <WhatsAppButton />
+      <VastuAIGuide />
 
       {/* Mobile CTA */}
       <button onClick={() => setShowAppointmentPopup(true)}

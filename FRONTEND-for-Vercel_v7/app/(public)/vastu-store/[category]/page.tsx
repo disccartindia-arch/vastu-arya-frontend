@@ -6,6 +6,7 @@ import Footer from '../../../../components/layout/Footer';
 import ProductCard from '../../../../components/store/ProductCard';
 import CartDrawer from '../../../../components/common/CartDrawer';
 import WhatsAppButton from '../../../../components/common/WhatsAppButton';
+import VastuAIGuide from '../../../../components/common/VastuAIGuide';
 import { useUIStore } from '../../../../store/uiStore';
 import { productsAPI } from '../../../../lib/api';
 import { Product } from '../../../../types';
@@ -60,6 +61,7 @@ export default function CategoryPage() {
       <Footer />
       <CartDrawer />
       <WhatsAppButton />
+      <VastuAIGuide />
     </>
   );
 }
