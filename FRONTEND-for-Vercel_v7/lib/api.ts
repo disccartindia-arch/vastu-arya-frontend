@@ -169,7 +169,8 @@ export const aiAPI = {
 };
 
 export const aiSettingsAPI = {
-  get:    () => api.get('/ai-settings'),
+  get:       () => api.get('/ai-settings'),               // admin only (requires auth)
+  getPublic: () => api.get('/ai-settings/public'),        // public — safe fields only
   update: (d: any) => api.put('/ai-settings', d),
   reset:  () => api.post('/ai-settings/reset'),
 };

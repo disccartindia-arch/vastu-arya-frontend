@@ -25,7 +25,7 @@ const WA          = '917000343804';
 
 /* ─── Types ─────────────────────────────────────────────────── */
 interface Remedy   { title: string; action: string; zone: string; benefit: string; }
-interface AIResult { greeting: string; analysis: string; remedies: Remedy[]; note: string; consultationCTA: string; }
+interface AIResult { greeting: string; analysis: string; remedies: Remedy[]; note: string; consultationCTA: string; disclaimer?: string; followUp?: string; }
 
 /* ─── Results Modal ──────────────────────────────────────────── */
 function ResultsModal({
@@ -121,6 +121,18 @@ function ResultsModal({
               <p className="text-gray-500 text-sm italic px-1 leading-relaxed">{result.note}</p>
             )}
 
+            {result.followUp && (
+              <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs text-blue-700 leading-relaxed">
+                💡 {result.followUp}
+              </div>
+            )}
+
+            {result.disclaimer && (
+              <p className="text-gray-400 text-xs px-1 leading-relaxed border-t border-gray-100 pt-3">
+                ⚠️ {result.disclaimer}
+              </p>
+            )}
+
             {/* Premium CTA */}
             <div
               className="rounded-2xl p-4 border"
@@ -205,9 +217,9 @@ export default function VastuAIPage() {
   const [loading,   setLoading]   = useState(false);
   const [result,    setResult]    = useState<AIResult | null>(null);
 
-  // ── Load dynamic settings from backend ───────────────────────
+  // ── Load public settings (no auth needed — uses public endpoint) ─
   useEffect(() => {
-    aiSettingsAPI.get()
+    aiSettingsAPI.getPublic()
       .then((r: any) => {
         const d = r?.data?.data;
         if (d?.quickSuggestions?.length) setConcerns(d.quickSuggestions);
