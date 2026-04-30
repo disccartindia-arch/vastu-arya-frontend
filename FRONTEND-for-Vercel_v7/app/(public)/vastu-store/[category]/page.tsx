@@ -1,67 +1,44 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import Navbar from '../../../../components/layout/Navbar';
-import Footer from '../../../../components/layout/Footer';
-import ProductCard from '../../../../components/store/ProductCard';
-import CartDrawer from '../../../../components/common/CartDrawer';
-import WhatsAppButton from '../../../../components/common/WhatsAppButton';
-import VastuAIGuide from '../../../../components/common/VastuAIGuide';
-import { useUIStore } from '../../../../store/uiStore';
-import { productsAPI } from '../../../../lib/api';
-import { Product } from '../../../../types';
-import { STORE_CATEGORIES } from '../../../../lib/utils';
-import Link from 'next/link';
+import type { Metadata } from 'next';
+import { buildMetadata } from '../../../../../lib/seo';
+import CategoryClient from './CategoryClient';
 
-export default function CategoryPage() {
-  const params = useParams();
-  const category = Array.isArray(params.category) ? params.category[0] : params.category;
-  const { lang } = useUIStore();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const cat = STORE_CATEGORIES.find(c => c.slug === category);
+const CATEGORY_META: Record<string, { title: string; description: string }> = {
+  rudraksha: {
+    title:       'Buy Authentic Rudraksha Online – 1 to 21 Mukhi | Vastu Arya',
+    description: 'Buy authentic certified Rudraksha beads online. All mukhis from 1 to 21, personally selected by Dr. PPS Tomar for maximum spiritual benefit. Pan-India delivery.',
+  },
+  gemstones: {
+    title:       'Certified Natural Gemstones Online – Ruby, Emerald, Sapphire & More',
+    description: 'Buy certified natural gemstones online — Ruby, Emerald, Yellow Sapphire, Blue Sapphire, Pearl and more. Lab-certified, astrology-grade stones curated by Dr. PPS Tomar.',
+  },
+  yantras: {
+    title:       'Buy Vastu Yantras Online – Shree Yantra, Vastu Dosh Nivaran & More',
+    description: 'Energised Vastu yantras for home and office — Shree Yantra, Vastu Dosh Nivaran Yantra, Kubera Yantra and more. Blessed and authenticated by Dr. PPS Tomar.',
+  },
+  'sacred-mala': {
+    title:       'Sacred Malas – Rudraksha Mala, Tulsi Mala & Japa Malas Online',
+    description: 'Shop handcrafted sacred malas for meditation — Rudraksha mala, Tulsi mala, Crystal mala and more. Energised and curated by Dr. PPS Tomar.',
+  },
+  'divine-frames': {
+    title:       'Divine Vastu Frames – Vastu Purush, Deity Frames for Home & Office',
+    description: 'Vastu-correct divine frames for your home and office. Vastu Purush mandala, deity portraits and sacred art to harmonise your space energy.',
+  },
+};
 
-  useEffect(() => {
-    if (!category) return;
-    setLoading(true);
-    productsAPI.getAll({ category })
-      .then(res => setProducts(res?.data?.data || []))
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
-  }, [category]);
+export async function generateMetadata(
+  { params }: { params: { category: string } }
+): Promise<Metadata> {
+  const meta = CATEGORY_META[params.category];
+  if (!meta) {
+    return buildMetadata({
+      title:       'Vastu Store – Sacred Products | Vastu Arya',
+      description: 'Shop authentic Vastu and spiritual products curated by Dr. PPS Tomar.',
+      path:        `/vastu-store/${params.category}`,
+    });
+  }
+  return buildMetadata({ ...meta, path: `/vastu-store/${params.category}` });
+}
 
-  return (
-    <>
-      <Navbar />
-      <main>
-        <section className="bg-dark-gradient py-12 text-center relative">
-          <div className="absolute inset-0 mandala-bg opacity-10"/>
-          <div className="relative">
-            <div className="text-5xl mb-2">{cat?.emoji || '🕉️'}</div>
-            <h1 className="font-display text-3xl font-bold text-white">{cat ? (lang === 'hi' ? cat.labelHi : cat.label) : category}</h1>
-            <Link href="/vastu-store" className="text-primary text-sm mt-2 block hover:underline">← Back to Vastu Store</Link>
-          </div>
-        </section>
-        <section className="py-12 bg-cream">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">{[...Array(8)].map((_,i)=><div key={i} className="h-64 skeleton rounded-2xl"/>)}</div>
-            ) : products.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">{products.map(p=><ProductCard key={p._id} product={p}/>)}</div>
-            ) : (
-              <div className="text-center py-20 text-gray-400">
-                <div className="text-5xl mb-3">📦</div>
-                <p>No products in this category yet.</p>
-                <Link href="/vastu-store" className="mt-4 inline-block text-primary hover:underline">Browse All Categories</Link>
-              </div>
-            )}
-          </div>
-        </section>
-      </main>
-      <Footer />
-      <CartDrawer />
-      <WhatsAppButton />
-      <VastuAIGuide />
-    </>
-  );
+export default function Page() {
+  return <CategoryClient />;
 }
