@@ -1,0 +1,134 @@
+/**
+ * lib/seo.ts — Central SEO helpers for Vastu Arya
+ * Import as: import { buildMetadata } from '@/lib/seo'
+ */
+import type { Metadata } from 'next';
+
+const SITE_URL      = 'https://www.vastuarya.com';
+const SITE_NAME     = 'Vastu Arya';
+const LOGO_URL      = `${SITE_URL}/logo.jpg`;
+const TWITTER       = '@VastuArya';
+
+const DEFAULT_TITLE       = 'Vastu Arya – IVAF Certified Vastu & Astrology Consultancy | Dr. PPS Tomar';
+const DEFAULT_DESCRIPTION = "India's premier Vastu Shastra, Astrology & Numerology platform by Dr. PPS Tomar — IVAF Certified Expert. 45,000+ happy clients. Book a consultation from just ₹11.";
+const DEFAULT_KEYWORDS    = [
+  'vastu shastra','vastu expert India','vastu arya','Dr PPS Tomar',
+  'IVAF certified vastu consultant','astrology consultation','numerology expert',
+  'online vastu consultation','home vastu','business vastu','vastu remedies',
+  'gemstone guidance','rudraksha consultation','vastu new delhi',
+];
+
+export interface PageSeoProps {
+  title?:       string;
+  description?: string;
+  path?:        string;
+  imageUrl?:    string;
+  keywords?:    string[];
+  noIndex?:     boolean;
+}
+
+export function buildMetadata({
+  title,
+  description = DEFAULT_DESCRIPTION,
+  path        = '/',
+  imageUrl    = LOGO_URL,
+  keywords    = DEFAULT_KEYWORDS,
+  noIndex     = false,
+}: PageSeoProps = {}): Metadata {
+  const fullTitle    = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
+  const canonicalUrl = `${SITE_URL}${path}`;
+  return {
+    title:       fullTitle,
+    description,
+    keywords:    keywords.join(', '),
+    alternates:  { canonical: canonicalUrl },
+    openGraph: {
+      title: fullTitle, description, url: canonicalUrl,
+      siteName: SITE_NAME, locale: 'en_IN', type: 'website',
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: fullTitle }],
+    },
+    twitter: {
+      card: 'summary_large_image', title: fullTitle, description,
+      images: [imageUrl], creator: TWITTER, site: TWITTER,
+    },
+    robots: noIndex
+      ? { index: false, follow: false }
+      : { index: true, follow: true, googleBot: { index: true, follow: true } },
+    verification: { google: 'XXXXXX' },
+  };
+}
+
+/** Full LocalBusiness + Person + WebSite JSON-LD for layout.tsx */
+export const vastuAryaJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['LocalBusiness','ProfessionalService'],
+      '@id':   `${SITE_URL}/#business`,
+      name: 'Vastu Arya', url: SITE_URL, logo: LOGO_URL, image: LOGO_URL,
+      telephone: '+91-7000343804', email: 'info@vastuarya.com',
+      description: "India's premier Vastu Shastra & Astrology consultancy by IVAF Certified Expert Dr. PPS Tomar.",
+      priceRange: '₹₹', currenciesAccepted: 'INR',
+      address: { '@type':'PostalAddress', addressLocality:'New Delhi', addressRegion:'Delhi', postalCode:'110001', addressCountry:'IN' },
+      geo: { '@type':'GeoCoordinates', latitude: 28.6139, longitude: 77.2090 },
+      aggregateRating: { '@type':'AggregateRating', ratingValue:'4.9', bestRating:'5', reviewCount:'45000' },
+      openingHoursSpecification: [
+        { '@type':'OpeningHoursSpecification', dayOfWeek:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens:'09:00', closes:'20:00' },
+        { '@type':'OpeningHoursSpecification', dayOfWeek:['Sunday'], opens:'10:00', closes:'17:00' },
+      ],
+      hasOfferCatalog: {
+        '@type':'OfferCatalog', name:'Vastu & Astrology Services',
+        itemListElement: [
+          { '@type':'Offer', itemOffered:{ '@type':'Service', name:'Vastu Shastra Consultancy' } },
+          { '@type':'Offer', itemOffered:{ '@type':'Service', name:'Home Energy Analysis' } },
+          { '@type':'Offer', itemOffered:{ '@type':'Service', name:'Business Vastu Consultation' } },
+          { '@type':'Offer', itemOffered:{ '@type':'Service', name:'Mobile Numerology' } },
+          { '@type':'Offer', itemOffered:{ '@type':'Service', name:'Gemstone Guidance' } },
+          { '@type':'Offer', itemOffered:{ '@type':'Service', name:'Vastu Check' } },
+        ],
+      },
+      sameAs: ['https://www.facebook.com/vastuarya','https://www.instagram.com/vastuarya','https://www.youtube.com/@vastuarya'],
+    },
+    {
+      '@type': 'Person',
+      '@id':   `${SITE_URL}/#drppstomar`,
+      name: 'Dr. PPS Tomar', honorificPrefix: 'Dr.',
+      jobTitle: 'IVAF Certified Vastu Shastra Expert & Astrologer',
+      url: `${SITE_URL}/about`, image: LOGO_URL, telephone: '+91-7000343804',
+      worksFor: { '@id': `${SITE_URL}/#business` },
+      address: { '@type':'PostalAddress', addressLocality:'New Delhi', addressCountry:'IN' },
+      knowsAbout: ['Vastu Shastra','Astrology','Numerology','Gemstone Therapy','Rudraksha','Business Vastu'],
+      hasCredential: {
+        '@type':'EducationalOccupationalCredential',
+        credentialCategory:'Professional Certification',
+        recognizedBy: { '@type':'Organization', name:'Indian Vastu Architects Federation (IVAF)' },
+      },
+    },
+    {
+      '@type': 'WebSite', '@id': `${SITE_URL}/#website`,
+      url: SITE_URL, name: SITE_NAME, description: DEFAULT_DESCRIPTION,
+      publisher: { '@id': `${SITE_URL}/#business` },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type':'EntryPoint', urlTemplate:`${SITE_URL}/blog?q={search_term_string}` },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ],
+};
+
+/** Service schema for book-appointment page */
+export const bookAppointmentJsonLd = {
+  '@context': 'https://schema.org',
+  '@type':    'Service',
+  name:       'Book Vastu Consultation with Dr. PPS Tomar',
+  description:'Book a Vastu Shastra, Astrology, or Numerology consultation with IVAF Certified Expert Dr. PPS Tomar. Starting from ₹11.',
+  url:        `${SITE_URL}/services/book-appointment`,
+  provider:   { '@id': `${SITE_URL}/#business` },
+  areaServed: { '@type':'Country', name:'India' },
+  offers: {
+    '@type':'Offer', price:'11', priceCurrency:'INR',
+    availability:'https://schema.org/InStock',
+    url:`${SITE_URL}/services/book-appointment`,
+  },
+};

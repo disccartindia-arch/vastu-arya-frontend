@@ -1,0 +1,29 @@
+# robots.txt for vastuarya.com
+# Vastu Arya - Dr. PPS Tomar | IVAF Certified Vastu & Astrology Consultancy
+
+User-agent: *
+Allow: /
+
+# Block admin and auth routes from indexing
+Disallow: /admin/
+Disallow: /admin
+Disallow: /login
+Disallow: /(auth)/
+Disallow: /api/
+Disallow: /payment-success
+Disallow: /_next/
+
+# Allow all crawlers on public content
+Allow: /
+Allow: /services
+Allow: /services/
+Allow: /vastu-store
+Allow: /vastu-store/
+Allow: /vastu-feed
+Allow: /vastu-ai
+Allow: /blog
+Allow: /about
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://www.vastuarya.com/sitemap.xml
