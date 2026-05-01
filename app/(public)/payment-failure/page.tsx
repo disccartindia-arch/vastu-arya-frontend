@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
-import { buildMetadata } from '@/lib/seo';
-import PaymentFailureClient from './PaymentFailureClient';
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+import PaymentFailureClient from "./PaymentFailureClient";
 
 export const metadata: Metadata = buildMetadata({
-  title:   'Payment Failure | Vastu Arya',
-  path:    '/payment-failure',
+  title:       "Payment Failed | Vastu Arya",
+  description: "",
+  path:        "/payment-failure",
   noIndex: true,
 });
 

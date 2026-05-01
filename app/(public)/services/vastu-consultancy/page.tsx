@@ -1,11 +1,12 @@
-import type { Metadata } from 'next';
-import { buildMetadata } from '@/lib/seo';
-import VastuConsultancyClient from './VastuConsultancyClient';
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+import VastuConsultancyClient from "./VastuConsultancyClient";
 
 export const metadata: Metadata = buildMetadata({
-  title:       'Vastu Shastra Consultancy – Online and In-Person | Dr. PPS Tomar',
-  description: 'Get a personalised Vastu Shastra consultation from IVAF Certified Expert Dr. PPS Tomar. Online sessions across India. Remedies without demolition. From ₹11.',
-  path:        '/services/vastu-consultancy',
+  title:       "Vastu Shastra Consultancy - Online and In-Person | Dr. PPS Tomar",
+  description: "Get a personalised Vastu Shastra consultation from IVAF Certified Expert Dr. PPS Tomar. Online sessions across India. Remedies without demolition. From Rs.11.",
+  path:        "/services/vastu-consultancy",
+
 });
 
 export default function Page() {
