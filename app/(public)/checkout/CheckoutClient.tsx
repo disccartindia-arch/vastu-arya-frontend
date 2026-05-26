@@ -7,6 +7,7 @@ import WhatsAppButton from '../../../components/common/WhatsAppButton';
 import { useCartStore } from '../../../store/cartStore';
 import { useUIStore } from '../../../store/uiStore';
 import { initiateRazorpayPayment } from '../../../lib/razorpay';
+import { ordersAPI } from '../../../lib/api';
 import { formatPrice } from '../../../lib/utils';
 import toast from 'react-hot-toast';
 export default function CheckoutPage() {
@@ -21,7 +22,22 @@ export default function CheckoutPage() {
     if (!name || !email || !phone || !address || !city || !pincode) return toast.error('Please fill all fields');
     setLoading(true);
     const orderItems = items.map(i => ({ name: i.product.name.en, price: i.product.offerPrice, qty: i.qty, image: i.product.images[0] || '', product: i.product._id }));
-    await initiateRazorpayPayment({ amount: totalPrice(), name, email, phone, description: 'Vastu Store Order', type: 'product', orderData: { customerInfo: form, items: orderItems, totalAmount: totalPrice() }, onSuccess: (data) => { setLoading(false); clearCart(); router.push(`/payment-success?orderId=${data.orderId}`); }, onFailure: () => setLoading(false) });
+    await initiateRazorpayPayment({ amount: totalPrice(), name, email, phone, description: 'Vastu Store Order', type: 'product', orderData: { customerInfo: form, items: orderItems, totalAmount: totalPrice() }, onSuccess: (data) => { setLoading(false); clearCart(); router.push(`/payment-success?orderId=${data.orderId}`); }, onFailure: async () => {
+        try {
+          const res = await ordersAPI.create({
+            customerInfo: form,
+            items: orderItems,
+            totalAmount: totalPrice(),
+            status: 'pending',
+            type: 'product'
+          });
+          setLoading(false);
+          clearCart();
+          router.push(`/payment-success?orderId=${res.data?.data?.orderId || ''}`);
+        } catch (err) {
+          setLoading(false);
+        }
+      } });
   };
   return (<><Navbar /><main className="min-h-screen bg-cream py-12"><div className="max-w-5xl mx-auto px-4 sm:px-6">
     <h1 className="font-display text-3xl font-bold text-text-dark mb-8">{lang==='en'?'Checkout':'चेकआउट'}</h1>

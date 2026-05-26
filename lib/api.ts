@@ -98,12 +98,14 @@ export const paymentAPI = {
 };
 
 export const ordersAPI = {
+  create: (d: any) => api.post('/orders', d),
   getAll: (p?: any) => api.get('/orders', { params: p }),
   getById: (id: string) => api.get(`/orders/${id}`),
   updateStatus: (id: string, d: any) => api.put(`/orders/${id}`, d),
 };
 
 export const bookingsAPI = {
+  create: (d: any) => api.post('/bookings', d),
   getAll: (p?: any) => api.get('/bookings', { params: p }),
   getById: (id: string) => api.get(`/bookings/${id}`),
   updateStatus: (id: string, d: any) => api.put(`/bookings/${id}`, d),

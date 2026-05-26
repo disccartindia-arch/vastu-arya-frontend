@@ -5,6 +5,7 @@ import { useUIStore } from '../../store/uiStore';
 import { useTranslation } from '../../lib/i18n';
 import { useRouter } from 'next/navigation';
 import { initiateRazorpayPayment } from '../../lib/razorpay';
+import { bookingsAPI } from '../../lib/api';
 import toast from 'react-hot-toast';
 
 export default function AppointmentPopup() {
@@ -30,7 +31,14 @@ export default function AppointmentPopup() {
       amount: 11, name, phone, description: 'Book Appointment with Dr. PPS Tomar', type: 'booking',
       orderData: { name, phone, serviceName: 'Book Appointment', amount: 11 },
       onSuccess: (data: any) => redirectToConfirm(data?.bookingId || ''),
-      onFailure: () => redirectToConfirm(),
+      onFailure: async () => {
+        try {
+          const res = await bookingsAPI.create({ name, phone, serviceName: 'Book Appointment', amount: 11, status: 'pending' });
+          redirectToConfirm(res.data?.data?.bookingId || '');
+        } catch (err) {
+          redirectToConfirm();
+        }
+      },
     });
   };
 

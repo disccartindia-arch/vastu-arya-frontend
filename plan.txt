@@ -1,0 +1,2 @@
+Wait! `AppointmentPopup.tsx` and `CheckoutClient.tsx` changes might have some lint errors or compilation errors. Let's verify by checking the file directly.
+Also, the Next.js prompt is blocking.
