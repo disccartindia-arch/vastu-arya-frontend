@@ -83,7 +83,7 @@ export default function TestimonialsSection() {
                     <Star key={j} size={14} className="text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
-                <p className="text-text-mid text-sm leading-relaxed mb-4 italic">"{t.text}"</p>
+                <p className="text-text-mid text-sm leading-relaxed mb-4 italic">&quot;{t.text}&quot;</p>
                 <div className="flex items-center gap-3">
                   {t.avatar ? (
                     // Fix #10 — proper alt text describing purpose + lazy load

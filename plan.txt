@@ -1,2 +1,11 @@
-Wait! `AppointmentPopup.tsx` and `CheckoutClient.tsx` changes might have some lint errors or compilation errors. Let's verify by checking the file directly.
-Also, the Next.js prompt is blocking.
+The user is encountering ESLint build failures on Vercel because `next lint` treats some warnings as errors in Vercel (or `react/no-unescaped-entities` is an error by default).
+The issue says:
+`86:82 Error: '"' can be escaped with '&quot;', '&ldquo;', '&#34;', '&rdquo;'. react/no-unescaped-entities`
+And multiple warnings about `<img>` instead of `<Image />` from Next.js.
+Since the Vercel build fails when ESLint has errors, we need to fix the `react/no-unescaped-entities` error.
+We can also fix the `<img>` warnings, but we can also just disable the `next/next/no-img-element` rule in `next.config.js` or `.eslintrc.json`, or fix them properly if it's easy. It's usually faster to just fix the quotes and add an eslint disable comment.
+
+Plan:
+1. Fix `react/no-unescaped-entities` in `components/home/TestimonialsSection.tsx` on line 86.
+2. In `.eslintrc.json` (if it exists) or `package.json`, disable `@next/next/no-img-element` so it doesn't cause build failures, or alternatively just change `<img>` to `<Image>` (but `Image` requires specific config for remote URLs, so disabling the rule is safer to prevent runtime errors with external image URLs).
+3. Wait, Vercel fails with code 1 if there are *any* errors. Warnings do not fail the build unless configured to do so. The quotes error is `Error`, while the `<img>` is `Warning`. So fixing the quote error will likely fix the build failure! But it's best to also fix/suppress the warnings.
