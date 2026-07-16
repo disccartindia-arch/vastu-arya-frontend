@@ -31,20 +31,45 @@ export default function AdminDashboard() {
   useEffect(() => {
     adminAPI.getDashboard().then(r => setData(r.data.data)).catch(console.error).finally(() => setLoading(false));
     
-    // Handle BOTH old backend format {providers, mode} AND new format {available, message, model}
+    // The current backend returns: { success:true, data:{ emergent, gemini, anthropic, mode } }
+    // Older builds returned:       { available, message, model, providers, mode } at the top level
+    // Even older Phase-B build returned: { providers, mode } directly.
+    // We defensively unwrap the axios body once, then handle all three shapes.
     aiStatusAPI.check()
       .then(r => {
-        const d = r.data;
-        // New format: has 'available' field directly
-        if (typeof d.available === 'boolean') {
+        const body = r?.data;
+        // Axios gives us the raw response body as r.data. Standard Vastu-Arya
+        // API responses wrap the payload as { success, data } — unwrap that
+        // once so we get to the actual status fields.
+        const d = (body && typeof body === 'object' && body.data && typeof body.data === 'object')
+          ? body.data
+          : body;
+
+        // Shape A — current Phase-E backend: { emergent, gemini, anthropic, mode }
+        if (typeof d?.emergent === 'boolean' || typeof d?.gemini === 'boolean' || typeof d?.anthropic === 'boolean' || d?.mode) {
+          const available = d.mode === 'live'
+            || d.emergent === true || d.gemini === true || d.anthropic === true;
+          const model = d.emergent  ? 'Emergent Universal (GPT-4o)'
+                      : d.anthropic ? 'Anthropic Claude'
+                      : d.gemini    ? 'Gemini'
+                      : null;
+          setAiStatus({
+            available,
+            model,
+            message: available ? 'AI Online' : 'No AI keys configured',
+            providers: { emergent: { configured: !!d.emergent }, gemini: { configured: !!d.gemini }, anthropic: { configured: !!d.anthropic } },
+          });
+        }
+        // Shape B — a middle build:  { available, message, model, ... }
+        else if (typeof d?.available === 'boolean') {
           setAiStatus(d);
         }
-        // Old format: has 'providers' and 'mode' — convert to new format
-        else if (d.providers || d.mode) {
+        // Shape C — older Phase-B build: { providers: {...}, mode }
+        else if (d?.providers || d?.mode) {
           setAiStatus({
             available: d.mode === 'live' || !!(d.providers?.gemini?.configured || d.providers?.anthropic?.configured),
             model: d.providers?.anthropic?.configured ? 'Anthropic Claude' : (d.providers?.gemini?.configured ? 'Gemini' : null),
-            message: d.mode === 'live' ? 'AI online' : 'No AI keys configured',
+            message: d.mode === 'live' ? 'AI Online' : 'No AI keys configured',
             providers: d.providers,
           });
         } else {

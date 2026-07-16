@@ -26,7 +26,14 @@ export default function AISettingsPage() {
       aiStatusAPI.check().catch(() => ({ data: { available: false } })),
     ]).then(([s, st]) => {
       setSettings(s?.data?.data || DEFAULT);
-      setAiStatus(st?.data);
+      // Unwrap { success, data:{...} } once so downstream reads (`aiStatus.available`,
+      // `aiStatus.emergent`, etc.) work no matter which backend shape we received.
+      const body = st?.data;
+      const d = (body && typeof body === 'object' && body.data && typeof body.data === 'object') ? body.data : body;
+      const available = typeof d?.available === 'boolean'
+        ? d.available
+        : (d?.mode === 'live' || d?.emergent === true || d?.gemini === true || d?.anthropic === true);
+      setAiStatus({ ...d, available });
     }).finally(() => setLoading(false));
   }, []);
 
