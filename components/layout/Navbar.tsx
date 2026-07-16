@@ -115,6 +115,8 @@ export default function Navbar() {
                       <Link href="/account/bookings" data-testid="nav-account-bookings" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>My Bookings</Link>
                       <Link href="/account/orders"   data-testid="nav-account-orders"   className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>My Orders</Link>
                       <Link href="/account/payments" data-testid="nav-account-payments" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>My Payments</Link>
+                      <Link href="/account/refunds"  data-testid="nav-account-refunds"  className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Refunds</Link>
+                      <Link href="/account/invoices" data-testid="nav-account-invoices" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Invoices</Link>
                       <Link href="/account/activity" data-testid="nav-account-activity" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Activity</Link>
                       <Link href="/account/profile"  data-testid="nav-account-profile"  className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Profile</Link>
                       <button onClick={logout} data-testid="nav-logout" className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors border-t border-orange-50 mt-1">{t('nav.logout')}</button>
@@ -159,6 +161,8 @@ export default function Navbar() {
                   { href: '/account/bookings', label: 'My Bookings', testid: 'mnav-account-bookings' },
                   { href: '/account/orders',   label: 'My Orders',   testid: 'mnav-account-orders'   },
                   { href: '/account/payments', label: 'My Payments', testid: 'mnav-account-payments' },
+                  { href: '/account/refunds',  label: 'Refunds',     testid: 'mnav-account-refunds'  },
+                  { href: '/account/invoices', label: 'Invoices',    testid: 'mnav-account-invoices' },
                   { href: '/account/activity', label: 'Activity',    testid: 'mnav-account-activity' },
                   { href: '/account/profile',  label: 'Profile',     testid: 'mnav-account-profile'  },
                 ].map(item => (

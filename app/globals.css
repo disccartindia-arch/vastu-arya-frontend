@@ -110,4 +110,10 @@ body {
   main { background: white !important; }
   body { color: #000 !important; }
   .max-h-\[65vh\] { max-height: unset !important; overflow: visible !important; }
+  /* Invoice: hide everything except the printable card */
+  body > *:not(.print-only) { display: none !important; }
+  .print-only { position: static !important; display: block !important; }
+  .print-only .invoice-printable { display: block !important; }
 }
+/* Off-screen carrier for the printable — hidden on screen, shown only on print */
+.print-only { position: fixed; left: -10000px; top: 0; }

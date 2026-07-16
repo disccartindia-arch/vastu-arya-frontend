@@ -48,10 +48,10 @@ export default function OrderDetailPage() {
     const idx = ORDER_STAGES.indexOf(data.status);
     const cancelled = data.status === 'cancelled';
     return [
-      { key: 'placed',     label: 'Order placed',      status: 'done', timestamp: data.createdAt },
-      { key: 'processing', label: 'Being prepared',    status: statusForStep(idx, 1, cancelled) },
-      { key: 'shipped',    label: 'Shipped',           status: statusForStep(idx, 2, cancelled) },
-      { key: 'delivered',  label: 'Delivered',         status: statusForStep(idx, 3, cancelled) },
+      { key: 'placed',     label: 'Pending',   status: 'done', timestamp: data.createdAt },
+      { key: 'processing', label: 'Packed',    status: statusForStep(idx, 1, cancelled) },
+      { key: 'shipped',    label: 'Shipped',   status: statusForStep(idx, 2, cancelled) },
+      { key: 'delivered',  label: 'Delivered', status: statusForStep(idx, 3, cancelled) },
     ];
   }, [data]);
 

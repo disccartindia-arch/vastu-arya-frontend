@@ -59,13 +59,11 @@ export default function BookingDetailPage() {
       data.timeline.find(t => t.field === field && t.newValue === value)?.timestamp;
 
     const steps: PaymentTimelineStep[] = [
-      { key: 'payment-pending',   label: 'Payment initiated',    status: statusForStep(paymentIdx, 0, refunded), timestamp: data.createdAt },
-      { key: 'payment-submitted', label: 'Payment reference received', status: rejected ? 'failed' : statusForStep(paymentIdx, 1), timestamp: findWhen('paymentStatus', 'submitted') },
-      { key: 'payment-verified',  label: 'Payment verified',     status: rejected ? 'skipped' : statusForStep(paymentIdx, 2), timestamp: findWhen('paymentStatus', 'verified') },
-      { key: 'booking-confirmed', label: 'Booking confirmed',    status: cancelled ? 'failed' : statusForStep(bookingIdx, 2),   timestamp: findWhen('bookingStatus', 'confirmed') },
-      { key: 'consultation',      label: 'Consultation scheduled', status: cancelled ? 'skipped' : statusForStep(bookingIdx, 3), timestamp: findWhen('bookingStatus', 'consultation_scheduled') },
-      { key: 'in-progress',       label: 'In progress',          status: cancelled ? 'skipped' : statusForStep(bookingIdx, 4),   timestamp: findWhen('bookingStatus', 'in_progress') },
-      { key: 'completed',         label: 'Completed',            status: cancelled ? 'failed'  : statusForStep(bookingIdx, 5),   timestamp: findWhen('bookingStatus', 'completed') },
+      { key: 'payment-pending',   label: 'Pending',          status: statusForStep(paymentIdx, 0, refunded), timestamp: data.createdAt },
+      { key: 'payment-received',  label: 'Payment Received', status: rejected ? 'failed' : (paymentIdx >= 2 ? 'done' : paymentIdx === 1 ? 'active' : 'pending'), timestamp: findWhen('paymentStatus', 'verified') || findWhen('paymentStatus', 'submitted') },
+      { key: 'booking-confirmed', label: 'Confirmed',        status: cancelled ? 'failed' : statusForStep(bookingIdx, 2),   timestamp: findWhen('bookingStatus', 'confirmed') },
+      { key: 'consultation',      label: 'Scheduled',        status: cancelled ? 'skipped' : statusForStep(bookingIdx, 3), timestamp: findWhen('bookingStatus', 'consultation_scheduled') },
+      { key: 'completed',         label: 'Completed',        status: cancelled ? 'failed'  : statusForStep(bookingIdx, 5),   timestamp: findWhen('bookingStatus', 'completed') },
     ];
     return steps;
   }, [data]);

@@ -10,7 +10,8 @@
 import { useEffect, useState } from 'react';
 import { accountAPI } from '../../../lib/accountAPI';
 import { LoadingSkeleton, ErrorState } from '../../../components/account/AccountStates';
-import { Save, Link2, CheckCircle } from 'lucide-react';
+import { useNotificationPreferences } from '../../../hooks/useNotificationPreferences';
+import { Save, Link2, CheckCircle, MessageCircle, Mail, MessageSquare, Bell } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Profile { name: string; email: string; phone: string | null; memberSince: string; totalBookings: number; totalOrders: number; }
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [saving, setSaving] = useState(false);
+  const { prefs, update: updatePrefs, hydrated: prefsReady } = useNotificationPreferences();
 
   // Claim flow state
   const [claimBookingId, setClaimBookingId] = useState('');
@@ -104,6 +106,38 @@ export default function ProfilePage() {
         </div>
       </div>
       <p className="text-xs text-gray-400 text-center">Member since {new Date(data.memberSince).toLocaleDateString('en-IN', { dateStyle: 'medium' })}</p>
+
+      <div className="bg-white rounded-2xl border border-orange-100 p-5 shadow-sm">
+        <h2 className="font-semibold text-gray-800 mb-1 flex items-center gap-2"><Bell size={16} className="text-primary" /> Notification Preferences</h2>
+        <p className="text-xs text-gray-500 mb-4">Choose how we should update you about bookings, payments and orders. Saved on this device.</p>
+        <div className="space-y-2">
+          {[
+            { key: 'whatsapp' as const, label: 'WhatsApp updates',  icon: MessageCircle, note: 'Live status changes on your phone' },
+            { key: 'email'    as const, label: 'Email updates',     icon: Mail,          note: 'Confirmations + monthly summaries' },
+            { key: 'sms'      as const, label: 'SMS updates',       icon: MessageSquare, note: 'Critical alerts only' },
+            { key: 'push'     as const, label: 'Push notifications', icon: Bell,         note: 'When you have the app installed' },
+          ].map(item => {
+            const Icon = item.icon;
+            const on = prefs[item.key];
+            return (
+              <label key={item.key} className="flex items-center gap-3 p-3 border border-gray-100 rounded-xl hover:bg-orange-50/40 cursor-pointer transition-colors" data-testid={`notif-${item.key}`}>
+                <div className="w-9 h-9 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0"><Icon size={15} className="text-primary" /></div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-800">{item.label}</p>
+                  <p className="text-[11px] text-gray-400">{item.note}</p>
+                </div>
+                <button type="button" role="switch" aria-checked={on}
+                  onClick={() => updatePrefs({ [item.key]: !on })}
+                  disabled={!prefsReady}
+                  className={`w-10 h-6 rounded-full flex items-center transition-colors ${on ? 'bg-primary' : 'bg-gray-200'} disabled:opacity-50`}>
+                  <span className={`block w-5 h-5 bg-white rounded-full shadow transform transition-transform ${on ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </button>
+              </label>
+            );
+          })}
+        </div>
+        <p className="text-[11px] text-gray-400 mt-3">Backend delivery via WhatsApp / SMS / push will activate as those channels come online. Email is already active.</p>
+      </div>
 
       <div className="bg-orange-50 rounded-2xl p-5 border border-orange-100">
         <h2 className="font-semibold text-gray-800 mb-1 flex items-center gap-2"><Link2 size={16} className="text-primary" /> Find a Past Booking</h2>

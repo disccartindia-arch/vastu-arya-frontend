@@ -18,13 +18,15 @@ import Link from 'next/link';
 import { useAuthStore } from '../../store/authStore';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import { LayoutDashboard, Calendar, CreditCard, Package, User, Activity } from 'lucide-react';
+import { LayoutDashboard, Calendar, CreditCard, Package, User, Activity, FileText, RefreshCcw } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/account', label: 'Overview', icon: LayoutDashboard },
   { href: '/account/bookings', label: 'My Bookings', icon: Calendar },
   { href: '/account/payments', label: 'My Payments', icon: CreditCard },
   { href: '/account/orders', label: 'My Orders', icon: Package },
+  { href: '/account/refunds', label: 'Refunds', icon: RefreshCcw },
+  { href: '/account/invoices', label: 'Invoices', icon: FileText },
   { href: '/account/activity', label: 'Activity', icon: Activity },
   { href: '/account/profile', label: 'Profile', icon: User },
 ];
