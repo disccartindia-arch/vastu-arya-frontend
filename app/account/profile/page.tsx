@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { accountAPI } from '../../../lib/accountAPI';
 import { LoadingSkeleton, ErrorState } from '../../../components/account/AccountStates';
 import { useNotificationPreferences } from '../../../hooks/useNotificationPreferences';
+import AvatarUpload from '../../../components/account/AvatarUpload';
 import { Save, Link2, CheckCircle, MessageCircle, Mail, MessageSquare, Bell } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -74,6 +75,9 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-5 max-w-lg">
+      <div className="bg-white rounded-2xl border border-orange-100 p-5 shadow-sm">
+        <AvatarUpload userId={data.email} name={data.name} />
+      </div>
       <div className="bg-white rounded-2xl border border-orange-100 p-5 shadow-sm">
         <h2 className="font-semibold text-gray-800 mb-4">Profile Details</h2>
         <div className="space-y-3">

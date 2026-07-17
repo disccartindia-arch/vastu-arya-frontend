@@ -23,7 +23,7 @@ function BookingContent() {
   const isConfirmed = !!refParam;
 
   const waMsg = `🙏 Namaste Dr. PPS Tomar!\n\nI want to confirm my Vastu consultation booking.\n\nName: ${name}\nPhone: ${phone}\nRef: ${bookingRef}`;
-  const waUrl = `https://wa.me/917000343804?text=${encodeURIComponent(waMsg)}`;
+  const waUrl = `https://wa.me/919111036751?text=${encodeURIComponent(waMsg)}`;
 
   const copyRef = () => {
     if (!navigator.clipboard) return;

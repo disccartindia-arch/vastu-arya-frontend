@@ -50,6 +50,7 @@ import UpiPaymentModal from "@/components/payment/UpiPaymentModal";
 import LeadGateModal, { LeadGateContext } from "@/components/leads/LeadGateModal";
 import { useUpiPayment } from "@/hooks/useUpiPayment";
 import { useUIStore } from "@/store/uiStore";
+import { useRequireLogin } from "@/hooks/useRequireLogin";
 
 interface Service {
   _id: string;
@@ -94,6 +95,7 @@ export default function AppointmentPopup({ lang = "en" }: AppointmentPopupProps)
   const [leadData, setLeadData] = useState<LeadData | null>(null);
 
   const { openUpiModal, upiModalProps } = useUpiPayment();
+  const requireLogin = useRequireLogin();
 
   const loadServices = useCallback(() => {
     setLoadingServices(true);
@@ -162,6 +164,10 @@ export default function AppointmentPopup({ lang = "en" }: AppointmentPopupProps)
   };
 
   const handlePayWithRazorpay = async (service: Service) => {
+    // Production rule: no guest purchase. If not logged in, close the
+    // popup and route to /login?redirect=<current>. The user comes
+    // back here after logging in and can pick the service again.
+    if (!requireLogin()) { onClose(); return; }
     setSelectedService(service);
     setPaying(true);
     syncLeadService(service);
@@ -204,6 +210,7 @@ export default function AppointmentPopup({ lang = "en" }: AppointmentPopupProps)
   };
 
   const handlePayWithUPI = (service: Service) => {
+    if (!requireLogin()) { onClose(); return; }
     setSelectedService(service);
     syncLeadService(service);
     openUpiModal({

@@ -116,7 +116,7 @@ function SubmittedContent() {
               className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl border border-orange-200 text-primary font-semibold text-sm">
               <Layers size={16} /> Browse Services
             </Link>
-            <a href={`https://wa.me/917000343804?text=${waMsg}`} target="_blank" rel="noopener noreferrer" data-testid="whatsapp-btn"
+            <a href={`https://wa.me/919111036751?text=${waMsg}`} target="_blank" rel="noopener noreferrer" data-testid="whatsapp-btn"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-[#25D366] text-white font-semibold text-sm">
               <MessageCircle size={16} /> Contact Support
             </a>

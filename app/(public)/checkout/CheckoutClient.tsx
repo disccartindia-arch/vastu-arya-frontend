@@ -9,6 +9,7 @@ import UpiPaymentModal from '../../../components/payment/UpiPaymentModal';
 import PaymentProgress, { PaymentStage } from '../../../components/payment/PaymentProgress';
 import { useCartStore } from '../../../store/cartStore';
 import { useUIStore } from '../../../store/uiStore';
+import { useRequireLogin } from '../../../hooks/useRequireLogin';
 import { initiateRazorpayPayment } from '../../../lib/razorpay';
 import { formatPrice } from '../../../lib/utils';
 import toast from 'react-hot-toast';
@@ -39,6 +40,7 @@ export default function CheckoutPage() {
   const [form, setForm]     = useState<FormState>(EMPTY_FORM);
   const [stage, setStage]   = useState<PaymentStage>('idle');
   const [upiOpen, setUpiOpen] = useState(false);
+  const requireLogin = useRequireLogin();
 
   const loading = stage !== 'idle' && stage !== 'failed' && stage !== 'done';
 
@@ -63,6 +65,7 @@ export default function CheckoutPage() {
     setForm(prev => ({ ...prev, [k]: e.target.value }));
 
   const handleCheckout = async () => {
+    if (!requireLogin()) return;
     const err = validate(form);
     if (err) { toast.error(err); return; }
 
@@ -192,7 +195,7 @@ export default function CheckoutPage() {
                 ) : (<>🔒 Pay {formatPrice(totalPrice())}</>)}
               </button>
 
-              <button onClick={() => setUpiOpen(true)} disabled={loading} data-testid="pay-upi-btn"
+              <button onClick={() => { if (requireLogin()) setUpiOpen(true); }} disabled={loading} data-testid="pay-upi-btn"
                 className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-orange-200 text-primary font-semibold text-sm disabled:opacity-60">
                 <QrCode size={14} /> Pay via UPI QR
               </button>

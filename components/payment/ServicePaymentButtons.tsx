@@ -32,6 +32,7 @@
 import React from "react";
 import UpiPaymentModal from "./UpiPaymentModal";
 import { useUpiPayment } from "@/hooks/useUpiPayment";
+import { useRequireLogin } from "@/hooks/useRequireLogin";
 import { formatAmount } from "@/config/payment.config";
 import { QrCode, ShieldCheck } from "lucide-react";
 
@@ -55,8 +56,15 @@ export default function ServicePaymentButtons({
   className = "",
 }: ServicePaymentButtonsProps) {
   const { openUpiModal, upiModalProps } = useUpiPayment();
+  const requireLogin = useRequireLogin();
+
+  const handleRazorpayClick = () => {
+    if (!requireLogin()) return;
+    onRazorpayClick?.();
+  };
 
   const handleUpiClick = () => {
+    if (!requireLogin()) return;
     openUpiModal({
       amount,
       itemName: serviceName,
@@ -71,7 +79,7 @@ export default function ServicePaymentButtons({
     <>
       <div className={`grid grid-cols-2 gap-2 ${className}`}>
         <button
-          onClick={onRazorpayClick}
+          onClick={handleRazorpayClick}
           className="py-2.5 rounded-xl text-white font-semibold text-xs"
           style={{ background: "linear-gradient(135deg,#FF6B00,#FF9933)" }}
         >

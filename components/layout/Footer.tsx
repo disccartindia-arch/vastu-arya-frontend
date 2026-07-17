@@ -9,7 +9,7 @@ import { homepageSettingsAPI } from '../../lib/api';
 export default function Footer() {
   const { } = useUIStore();
   const { t } = useTranslation();
-  const [fd, setFd] = useState({ phone: '+91-7000343804', email: 'vastuarya@gmail.com', address: 'MP, India', whatsapp: '917000343804' });
+  const [fd, setFd] = useState({ phone: '+91-7000343804', email: 'vastuarya@gmail.com', address: 'MP, India', whatsapp: '919111036751' });
 
   useEffect(() => {
     homepageSettingsAPI.get().then((r: any) => {

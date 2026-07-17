@@ -276,7 +276,7 @@ export default function StatusClient({ bookingId }: StatusClientProps) {
             </div>
             <h1 className="font-display text-xl font-bold text-text-dark mb-2">Booking Not Found</h1>
             <p className="text-text-light text-sm mb-6">{error}</p>
-            <a href="https://wa.me/917000343804" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/919111036751" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-xl font-semibold text-sm">
               <MessageCircle size={16} /> Contact Support
             </a>
@@ -386,7 +386,7 @@ export default function StatusClient({ bookingId }: StatusClientProps) {
             <button onClick={load} className="w-full py-3 rounded-2xl border border-orange-200 text-primary font-semibold text-sm flex items-center justify-center gap-2">
               <RefreshCw size={14} /> Refresh Status
             </button>
-            <a href={`https://wa.me/917000343804?text=${encodeURIComponent(`🙏 Namaste! I have a question about my booking ${data.bookingId}.`)}`}
+            <a href={`https://wa.me/919111036751?text=${encodeURIComponent(`🙏 Namaste! I have a question about my booking ${data.bookingId}.`)}`}
               target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl bg-[#25D366] text-white font-bold text-sm">
               <MessageCircle size={16} /> Contact Support

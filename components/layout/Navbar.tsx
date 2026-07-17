@@ -5,7 +5,7 @@ import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
 import { useAuthStore } from '../../store/authStore';
 import { useTranslation } from '../../lib/i18n';
-import { ShoppingCart, Menu, X, ChevronDown, Search } from 'lucide-react';
+import { ShoppingCart, Menu, X, ChevronDown, Search, User } from 'lucide-react';
 import { homepageSettingsAPI } from '../../lib/api';
 
 export default function Navbar() {
@@ -17,6 +17,14 @@ export default function Navbar() {
   const { user, logout, isAdmin } = useAuthStore();
   const { t } = useTranslation();
   const [brand, setBrand] = useState({ name: 'Vastu Arya', subtitle: 'IVAF Certified', phone: '+91-7000343804' });
+  // Read the locally-persisted avatar (uploaded via /account/profile).
+  // Kept per-tab in localStorage under vastu_avatar_<email>. Nothing
+  // sensitive lives here — it's a client-side convenience mirror.
+  const [avatar, setAvatar] = useState<string | null>(null);
+  useEffect(() => {
+    if (!user?.email) { setAvatar(null); return; }
+    try { setAvatar(localStorage.getItem(`vastu_avatar_${user.email}`)); } catch { setAvatar(null); }
+  }, [user?.email]);
 
   const NAV_LINKS = [
     { href: '/', label: t('nav.home') },
@@ -100,7 +108,11 @@ export default function Navbar() {
               {user ? (
                 <div className="relative group" data-testid="account-dropdown">
                   <button className="flex items-center gap-1 p-1" data-testid="account-avatar-btn" aria-label="Account menu">
-                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ background: 'linear-gradient(135deg,#D4A017,#FF6B00)' }}>{user.name?.[0]?.toUpperCase()}</span>
+                    {avatar ? (
+                      <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover border border-orange-200" />
+                    ) : (
+                      <span className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ background: 'linear-gradient(135deg,#D4A017,#FF6B00)' }}>{user.name?.[0]?.toUpperCase()}</span>
+                    )}
                     <ChevronDown size={12} style={{ color: '#5C3D1E' }} />
                   </button>
                   <div className="absolute right-0 top-full pt-2 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all z-50">
@@ -115,16 +127,23 @@ export default function Navbar() {
                       <Link href="/account/bookings" data-testid="nav-account-bookings" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>My Bookings</Link>
                       <Link href="/account/orders"   data-testid="nav-account-orders"   className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>My Orders</Link>
                       <Link href="/account/payments" data-testid="nav-account-payments" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>My Payments</Link>
-                      <Link href="/account/refunds"  data-testid="nav-account-refunds"  className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Refunds</Link>
                       <Link href="/account/invoices" data-testid="nav-account-invoices" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Invoices</Link>
-                      <Link href="/account/activity" data-testid="nav-account-activity" className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Activity</Link>
                       <Link href="/account/profile"  data-testid="nav-account-profile"  className="block px-4 py-2 text-sm hover:bg-orange-50 transition-colors" style={{ color: '#5C3D1E' }}>Profile</Link>
                       <button onClick={logout} data-testid="nav-logout" className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors border-t border-orange-50 mt-1">{t('nav.logout')}</button>
                     </div>
                   </div>
                 </div>
               ) : (
-                <Link href="/login" className="hidden sm:block text-sm font-medium hover:text-primary transition-colors" style={{ color: '#5C3D1E' }}>{t('nav.login')}</Link>
+                <Link
+                  href="/login"
+                  data-testid="nav-login-btn"
+                  aria-label="Login"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-orange-50 transition-colors"
+                  style={{ color: '#5C3D1E', border: '1px solid rgba(212,160,23,0.35)' }}
+                >
+                  <User size={14} />
+                  <span className="hidden xs:inline sm:inline">{t('nav.login')}</span>
+                </Link>
               )}
               <button onClick={() => { setMobileMenuOpen(!mobileMenuOpen); setSearchOpen(false); }} className="xl:hidden p-2 rounded-lg hover:bg-orange-50 transition-colors" aria-label="Menu">
                 {mobileMenuOpen ? <X size={20} style={{ color: '#5C3D1E' }} /> : <Menu size={20} style={{ color: '#5C3D1E' }} />}
@@ -161,9 +180,7 @@ export default function Navbar() {
                   { href: '/account/bookings', label: 'My Bookings', testid: 'mnav-account-bookings' },
                   { href: '/account/orders',   label: 'My Orders',   testid: 'mnav-account-orders'   },
                   { href: '/account/payments', label: 'My Payments', testid: 'mnav-account-payments' },
-                  { href: '/account/refunds',  label: 'Refunds',     testid: 'mnav-account-refunds'  },
                   { href: '/account/invoices', label: 'Invoices',    testid: 'mnav-account-invoices' },
-                  { href: '/account/activity', label: 'Activity',    testid: 'mnav-account-activity' },
                   { href: '/account/profile',  label: 'Profile',     testid: 'mnav-account-profile'  },
                 ].map(item => (
                   <Link key={item.href} href={item.href} data-testid={item.testid} onClick={() => setMobileMenuOpen(false)}

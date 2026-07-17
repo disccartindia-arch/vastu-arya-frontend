@@ -29,7 +29,7 @@ import toast from 'react-hot-toast';
 const DEFAULT_CONCERNS = ['Financial problems','Relationship issues','Health problems','Career obstacles','Sleep disturbances','Family conflicts','Business losses','Child education'];
 const ROOM_TYPES = ['Living Room','Bedroom','Kitchen','Home Office','Entire Home','Shop/Office'];
 const DIRECTIONS = ['North','South','East','West','North-East','North-West','South-East','South-West'];
-const WA = '917000343804';
+const WA = '919111036751';
 const MAX_IMAGES = 4;
 
 export default function VastuAIPage() {

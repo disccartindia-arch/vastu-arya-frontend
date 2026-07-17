@@ -215,7 +215,7 @@ function SuccessContent() {
                 <Sparkles size={14} /> Book Another
               </Link>
             </div>
-            <a href={`https://wa.me/917000343804?text=${encodeURIComponent(`🙏 Namaste! My payment is confirmed. Ref: ${display.reference || '-'}`)}`}
+            <a href={`https://wa.me/919111036751?text=${encodeURIComponent(`🙏 Namaste! My payment is confirmed. Ref: ${display.reference || '-'}`)}`}
               target="_blank" rel="noopener noreferrer" data-testid="whatsapp-btn"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-[#25D366] text-white font-semibold text-sm hover:brightness-105 transition-all">
               <MessageCircle size={14} /> WhatsApp Support

@@ -32,7 +32,7 @@ export default function RefundsPage() {
     return (
       <div className="space-y-4">
         <EmptyState icon={RefreshCcw} title="No refunds" subtitle="Refunded payments will appear here automatically." />
-        <p className="text-center text-xs text-gray-400">Need help with a refund? <Link href="https://wa.me/917000343804" className="text-primary underline">Contact support on WhatsApp</Link>.</p>
+        <p className="text-center text-xs text-gray-400">Need help with a refund? <Link href="https://wa.me/919111036751" className="text-primary underline">Contact support on WhatsApp</Link>.</p>
       </div>
     );
   }

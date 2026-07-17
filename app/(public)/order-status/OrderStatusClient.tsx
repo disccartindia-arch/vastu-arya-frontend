@@ -174,7 +174,7 @@ function OrderStatusContent() {
                 </div>
               )}
 
-              <a href={`https://wa.me/917000343804?text=${waMsg}`} target="_blank" rel="noopener noreferrer"
+              <a href={`https://wa.me/919111036751?text=${waMsg}`} target="_blank" rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-[#25D366] text-white font-semibold text-sm">
                 <MessageCircle size={16} /> Contact on WhatsApp
               </a>

@@ -13,7 +13,7 @@ interface Props { icon: string; title: string; subtitle: string; description: st
 
 export default function ServicePageTemplate({ icon, title, subtitle, description, price, originalPrice, duration, benefits, process, faqs, badge }: Props) {
   const { setShowAppointmentPopup } = useUIStore();
-  const WA = '917000343804';
+  const WA = '919111036751';
   const waMsg = encodeURIComponent(`Namaste Dr. PPS ji 🙏 I want to book "${title}". Please guide me.`);
   const discount = Math.round((1 - price / originalPrice) * 100);
   return (
