@@ -78,3 +78,40 @@
 - Frontend changes (Phase D already shipped).
 - Rebuilding admin UI, i18n, or database schemas.
 - Adding actual WhatsApp/SMS providers (the dispatch layer supports them, no real provider wired in).
+
+---
+
+## 2026-02-17 · Admin Consultation Scheduling (Phase F, frontend-only)
+
+**What was built.** Two-file feature that lets an admin schedule a customer's
+consultation directly from the /admin/bookings row expander and surfaces the
+scheduled details on the customer's booking detail page.
+
+**Files touched (frontend-only):**
+- `/app/app/admin/bookings/page.tsx` — Added ScheduleConsultation card with
+  Date, Time, Meeting Type (backend enum: google_meet | whatsapp | phone |
+  offline), Meeting Link, Customer Note, primary "Schedule & Notify Customer"
+  button. Wired to existing `bookingsAPI.updateStatus` (PUT /api/bookings/:id).
+  Handles loading, success, error, prefill from server, and auto-refresh.
+- `/app/app/account/bookings/[bookingId]/page.tsx` — Reads `meetingType`
+  (with legacy `meetingMode` fallback), maps enum to human label, renders the
+  customer note in an orange callout at `data-testid=customer-note`.
+- `/app/memory/test_credentials.md` — Added verified admin creds
+  (Vastuarya@Admin.com / Admin@2407@) and a real test booking to schedule
+  against (BK1784229269322795).
+
+**Backend contract used (existing, not changed):** PUT `/api/bookings/:id`
+accepts `{consultationDate, consultationTime, meetingType, meetingLink?,
+customerNote?, consultationAdminNote?}` and auto-sets
+`bookingStatus='consultation_scheduled'`, `consultationStatus='scheduled'`,
+`scheduledBy`, `scheduledAt`.
+
+**Testing.** Frontend testing agent run — iteration_1 report: all admin-side
+acceptance criteria (AC1-9, AC11) PASS; AC10 verified by code review only
+(production CORS blocks preview origin — pre-existing environmental blocker
+outside this feature's scope). No product bugs found. Build + type-check pass.
+
+**Known backend dependency (not faked in UI).** WhatsApp/Email/SMS
+notification-on-schedule is a backend hook and cannot be verified from the
+frontend — the UI intentionally does NOT claim "customer notified" (per
+AC #11). Success toast reads "Consultation scheduled and saved to booking."
