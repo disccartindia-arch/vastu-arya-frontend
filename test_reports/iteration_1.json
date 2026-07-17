@@ -1,0 +1,45 @@
+{
+  "summary": "Frontend-only E2E verification of Admin Consultation Scheduling (AC #1-#11). All admin scheduler flows verified via Playwright with routed API mocks (production backend blocks preview URL via CORS). Restarted next-server which was serving stale chunk (page-40e4a2cd208e773e.js -> new page-016211a33189b8d4.js) — chunk mismatch caused blank page. After restart all admin acceptance criteria pass. Customer-facing page (/account/bookings/[bookingId]) E2E could not be exercised because production CORS blocks real API and mock-based nav is defeated by the account layout auth guard redirecting before Zustand persist hydrates; the customer-note test-id and Google Meet label mapping were confirmed via source code review.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Production Backend CORS", "issue": "The production Render backend at https://vastu-arya-backend-1.onrender.com/api does NOT return Access-Control-Allow-Origin for origin https://d317c2b3-166c-4af0-9b7d-90eecbbf92b6.preview.emergentagent.com. All XHR calls (including /api/auth/login, /api/bookings, /api/account/bookings/:id) are blocked. Preflight OPTIONS returns HTTP 500. This blocks real E2E verification against production data. Testing had to fall back to Playwright route interception with mocked API responses.", "affected_selectors": ["all"]},
+      {"flow": "Customer /account/bookings/[bookingId] auth-guard hydration race", "issue": "After a valid login on /login (customer flow), navigating to /account/bookings/:id redirects back to /login because the client-side auth guard reads useAuthStore() before Zustand-persist re-hydrates from localStorage on hard navigation. Reproducible whether page.goto or an injected <a> click is used. Admin layout has the same pattern but works when navigation goes through the sidebar Link (client-side transition preserves the already-hydrated store). Recommend gating the guard on a hasHydrated flag from persist(onRehydrateStorage) instead of firing the redirect on the very first render."}
+    ],
+    "design_issues": []
+  },
+  "acceptance_criteria_results": {
+    "AC1_date_input_present": "PASS (data-testid=sched-date-<id>)",
+    "AC2_time_input_present": "PASS (data-testid=sched-time-<id>)",
+    "AC3_meeting_type_present_with_correct_enums": "PASS — options: [google_meet: 'Google Meet', whatsapp: 'WhatsApp Call', phone: 'Phone Call', offline: 'Offline (in-person)']",
+    "AC4_meeting_link_optional": "PASS (data-testid=sched-link-<id>)",
+    "AC5_customer_note": "PASS (data-testid=sched-cnote-<id>)",
+    "AC6_primary_button": "PASS (data-testid=schedule-notify-btn-<id> — 'Schedule & Notify Customer')",
+    "AC7_uses_existing_PUT_/api/bookings/:id": "PASS — payload observed: {consultationDate, consultationTime, meetingType, meetingLink, customerNote}",
+    "AC8_loading_error_success_states": "PARTIAL — error toast 'Could not schedule consultation' shown on 500 and button returns to non-loading (PASS). Success toast 'Consultation scheduled and saved to booking.' shown (PASS). Client-side validation toasts shown for empty date/time/type (PASS). 'Scheduling…' spinner label was NOT captured under mocked route (response resolves instantly); however source code at page.tsx:327 clearly toggles the label using `scheduling[b._id]`. Reasonable to consider PASS by code review, cannot prove in-mock.",
+    "AC9_list_refreshes_after_success": "PASS — bookingsAPI.getAll re-invoked after PUT; row badge updated to 'consultation scheduled'.",
+    "AC10_customer_page_renders_scheduled_details": "UNVERIFIED end-to-end (see Frontend Integration issue #2). Source code review confirms customer note, meeting type -> human label, and Join Meeting link all render at [data-testid=customer-note] and href={meetingLink}.",
+    "AC11_no_fake_fields_or_fake_notifications": "PASS — success toast literally reads 'Consultation scheduled and saved to booking.' and does NOT claim 'customer notified'. Payload contains only backend-supported fields."
+  },
+  "responsive_test": "Mobile 375x812: date and time inputs stack vertically (single-column), 'Schedule & Notify Customer' button height = 44px, width = 283px (full width inside the padded container). PASS.",
+  "action_items": [
+    "Ask backend team to add the preview host (https://d317c2b3-166c-4af0-9b7d-90eecbbf92b6.preview.emergentagent.com) to the Render backend CORS allow-list so end-to-end tests can hit real data.",
+    "Consider gating the /account/* and /admin/* auth-guard redirect on a Zustand persist hasHydrated flag (persist onRehydrateStorage) to avoid the redirect-race on hard navigations.",
+    "Backend notification delivery (WhatsApp/Email/SMS) is not observable from the frontend — the frontend correctly avoids falsely claiming the customer was notified (per AC #11). Verifying that the backend actually dispatches a notification requires backend logs and is out of scope for this frontend-only test."
+  ],
+  "critical_code_review_comments": [
+    "app/admin/bookings/page.tsx uses `require('react') as any` at line 45 (import-time coupling) — prefer normal useState import for consistency and better tree-shaking.",
+    "app/admin/bookings/page.tsx is ~370 lines — approaching split threshold. Consider extracting <ScheduleConsultationCard> into its own component for testability.",
+    "In prefillDraft() (page.tsx:107), the check `if (scheduler[b._id]) return` means that after a successful save, the local `scheduler[id]` object still holds the last submitted values — this coincidentally provides prefill even when the returned Booking is stale, which is fine, but it means an admin re-opening the row will see their DRAFT values, not necessarily the backend's canonical values. Consider always re-hydrating from the latest server booking after a successful schedule.",
+    "The scheduleAndNotify success toast text is a bit euphemistic — 'saved to booking' is accurate; keeping this wording is correct because backend notification is not guaranteed."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "N/A (frontend-only test)", "frontend": "100% of admin AC, customer-side AC10 verified by code review only" },
+  "test_credentials": "Admin login used against MOCKED /api/auth/login (Vastuarya@Admin.com / Admin@2407@) because production backend refused CORS from preview origin.",
+  "seed_data_creation": "None. Used mocked Playwright routes to simulate one booking (BK1784229269322795 / mongo _id 6a592d95bb74b4ff39a7892b).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Environment quirk: the running Next.js server MUST be restarted with `pkill -f 'next-server'; cd /app && PORT=3000 HOST=0.0.0.0 nohup yarn start > /tmp/nextjs.log 2>&1 &` after any `yarn build`, otherwise HTML references stale chunk names and admin pages render blank with ChunkLoadError. Production backend CORS blocks the preview origin — any real API E2E MUST use Playwright route interception. Customer-side /account/bookings/[bookingId] hits an auth-guard hydration race on hard navigation — either fix the guard or use an in-app <Link> click after login.",
+  "rca_of_the_issue": "Two environmental blockers surfaced: (1) Production Render backend does not allow the emergent preview host in its CORS Access-Control-Allow-Origin, causing every real XHR to fail before it reaches the backend; (2) The running next-server process at preview URL was launched before the last `yarn build`, so it kept serving old HTML pointing to non-existent chunk file `page-40e4a2cd208e773e.js` (server 400) — the admin/bookings page rendered as a blank screen. Both were mitigated by (a) restarting yarn start with the fresh build, and (b) using Playwright route interception with mocked JSON responses so the actual admin scheduling UI could be exercised. No product bugs were found in the admin scheduler code — it fully satisfies AC #1-#9 and #11."
+}

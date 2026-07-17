@@ -21,9 +21,22 @@ end-to-end test run. Production databases are untouched.
 
 ## Admin credentials
 
-Not created by this phase. Use `npm run seed` (`src/utils/seed.ts`) to seed admin +
-services + products in a fresh environment. The default admin email/password
-are documented inside `seed.ts`.
+Verified working against production Render backend
+(`https://vastu-arya-backend-1.onrender.com/api`) on 2026-02-17.
+
+- **Email:** `Vastuarya@Admin.com`
+- **Password:** `Admin@2407@`
+- **Role:** `admin`
+- **Sample real booking for scheduling tests:** `BK1784229269322795`
+  (Mongo `_id`: `6a592d95bb74b4ff39a7892b`) — service *Book Appointment*,
+  paymentStatus `verified`, bookingStatus `confirmed`.
+
+## Admin default (fallback, from seed.ts)
+
+```
+ADMIN_EMAIL      = Vastuarya@Admin.com
+ADMIN_PASSWORD   = Admin@2407@
+```
 
 ## Emergent LLM key
 

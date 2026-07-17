@@ -85,12 +85,80 @@ export default function BookingsPage() {
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  // Consultation-scheduler drafts, keyed by booking._id. All fields optional
+  // until the admin clicks the primary "Schedule & Notify Customer" CTA.
+  const [scheduler, setScheduler] = useState<Record<string, {
+    date: string; time: string; type: string; link: string; customerNote: string;
+  }>>({});
+  const [scheduling, setScheduling] = useState<Record<string, boolean>>({});
 
   const load = () => {
     setLoading(true);
     bookingsAPI.getAll().then(r => setBookings(r.data.data || [])).catch(() => toast.error('Failed to load')).finally(() => setLoading(false));
   };
   useEffect(() => { load(); }, []);
+
+  const draftFor = (id: string) => scheduler[id] || { date: '', time: '', type: '', link: '', customerNote: '' };
+  const setDraft = (id: string, patch: Partial<{ date: string; time: string; type: string; link: string; customerNote: string }>) =>
+    setScheduler(prev => ({ ...prev, [id]: { ...draftFor(id), ...patch } }));
+
+  // Pre-fill scheduler draft when the admin expands a booking that already has
+  // consultation details (from top-level fields). Keeps repeat edits ergonomic.
+  const prefillDraft = (b: Booking) => {
+    if (scheduler[b._id]) return;
+    const anyB = b as any;
+    // Backend stores consultationDate as full ISO; date input needs YYYY-MM-DD.
+    const dateISO: string = anyB.consultationDate || '';
+    const dateOnly = dateISO && dateISO.length >= 10 ? dateISO.slice(0, 10) : '';
+    setDraft(b._id, {
+      date: dateOnly,
+      time: anyB.consultationTime || '',
+      type: anyB.meetingType || '',
+      link: anyB.meetingLink || '',
+      customerNote: anyB.customerNote || '',
+    });
+  };
+
+  const scheduleAndNotify = async (b: Booking) => {
+    const d = draftFor(b._id);
+    if (!d.date) { toast.error('Please pick a consultation date'); return; }
+    if (!d.time) { toast.error('Please pick a consultation time'); return; }
+    if (!d.type) { toast.error('Please select a meeting type'); return; }
+    setScheduling(prev => ({ ...prev, [b._id]: true }));
+    try {
+      // Backend contract (verified against PUT /api/bookings/:id):
+      //  - consultationDate (YYYY-MM-DD), consultationTime (HH:MM)
+      //  - meetingType ∈ {google_meet, whatsapp, phone, offline}
+      //  - meetingLink (optional string), customerNote (optional string)
+      //  - consultationAdminNote (optional, admin-only internal note)
+      // Backend auto-sets bookingStatus='consultation_scheduled',
+      // consultationStatus='scheduled', scheduledBy, scheduledAt.
+      const payload: Record<string, any> = {
+        consultationDate: d.date,
+        consultationTime: d.time,
+        meetingType: d.type,
+        meetingLink: d.link || '',
+        customerNote: d.customerNote || '',
+      };
+      const internalNote = noteDrafts[b._id]?.trim();
+      if (internalNote) payload.consultationAdminNote = internalNote;
+
+      const { data } = await bookingsAPI.updateStatus(b._id, payload);
+      setBookings(prev => prev.map(x => x._id === b._id ? { ...x, ...data.data } : x));
+      setNoteDrafts(prev => ({ ...prev, [b._id]: '' }));
+      // NOTE: We don't claim "customer notified" here. Whether the customer
+      // actually receives a WhatsApp/Email/SMS notification depends on the
+      // backend PUT /bookings/:id status-change hook (documented backend
+      // dependency). The scheduled details are always persisted regardless.
+      toast.success('Consultation scheduled and saved to booking.');
+      // Full silent refresh so the row reflects the backend's canonical state.
+      bookingsAPI.getAll().then(r => setBookings(r.data.data || [])).catch(() => {});
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message || 'Could not schedule consultation');
+    } finally {
+      setScheduling(prev => ({ ...prev, [b._id]: false }));
+    }
+  };
 
   const updateField = async (id: string, field: 'paymentStatus' | 'bookingStatus', value: string) => {
     try {
@@ -151,7 +219,7 @@ export default function BookingsPage() {
           <div className="divide-y divide-gray-50">
             {filtered.map(b => (
               <div key={b._id}>
-                <div className="flex items-center gap-4 px-4 py-3 hover:bg-orange-50/30 cursor-pointer" onClick={() => setExpanded(expanded === b._id ? null : b._id)}>
+                <div className="flex items-center gap-4 px-4 py-3 hover:bg-orange-50/30 cursor-pointer" onClick={() => { setExpanded(expanded === b._id ? null : b._id); prefillDraft(b); }}>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="font-mono text-xs text-gray-400">{b.bookingId}</span>
@@ -181,7 +249,86 @@ export default function BookingsPage() {
                       </div>
                     </div>
 
-                    {/* Dual status controls */}
+                    {/* PRIMARY WORKFLOW — consultation scheduler.
+                        Replaces "Admin note" as the primary action.
+                        Admin note is still available below as an optional
+                        internal note attached to any subsequent status change. */}
+                    <div className="rounded-xl border border-orange-200 bg-white p-3 sm:p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Calendar size={14} className="text-primary" />
+                        <p className="text-sm font-semibold text-gray-800">Schedule Consultation</p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                        <div>
+                          <label className="block text-[11px] font-medium text-gray-500 mb-1">Date *</label>
+                          <input
+                            type="date"
+                            value={draftFor(b._id).date}
+                            onChange={e => setDraft(b._id, { date: e.target.value })}
+                            data-testid={`sched-date-${b._id}`}
+                            className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-primary"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-medium text-gray-500 mb-1">Time *</label>
+                          <input
+                            type="time"
+                            value={draftFor(b._id).time}
+                            onChange={e => setDraft(b._id, { time: e.target.value })}
+                            data-testid={`sched-time-${b._id}`}
+                            className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-primary"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-medium text-gray-500 mb-1">Meeting Type *</label>
+                          <select
+                            value={draftFor(b._id).type}
+                            onChange={e => setDraft(b._id, { type: e.target.value })}
+                            data-testid={`sched-type-${b._id}`}
+                            className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-primary"
+                          >
+                            <option value="">Select type…</option>
+                            <option value="google_meet">Google Meet</option>
+                            <option value="whatsapp">WhatsApp Call</option>
+                            <option value="phone">Phone Call</option>
+                            <option value="offline">Offline (in-person)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-medium text-gray-500 mb-1">Meeting Link (optional)</label>
+                          <input
+                            type="url"
+                            value={draftFor(b._id).link}
+                            onChange={e => setDraft(b._id, { link: e.target.value })}
+                            placeholder="https://meet.google.com/…"
+                            data-testid={`sched-link-${b._id}`}
+                            className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block text-[11px] font-medium text-gray-500 mb-1">Customer Note (shown to customer)</label>
+                          <textarea
+                            rows={2}
+                            value={draftFor(b._id).customerNote}
+                            onChange={e => setDraft(b._id, { customerNote: e.target.value })}
+                            placeholder="Anything the customer should prepare or know beforehand…"
+                            data-testid={`sched-cnote-${b._id}`}
+                            className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-primary resize-none"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => scheduleAndNotify(b)}
+                        disabled={!!scheduling[b._id]}
+                        data-testid={`schedule-notify-btn-${b._id}`}
+                        className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-white text-sm disabled:opacity-60 transition-all active:scale-[0.99]"
+                        style={{ background: 'linear-gradient(135deg,#FF6B00,#FF9933)' }}
+                      >
+                        {scheduling[b._id] ? (<><RefreshCw size={14} className="animate-spin" /> Scheduling…</>) : (<><Calendar size={14} /> Schedule &amp; Notify Customer</>)}
+                      </button>
+                    </div>
+
+                    {/* Dual status controls — retained for granular changes */}
                     <div className="grid sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1">Payment Status</label>
@@ -197,17 +344,20 @@ export default function BookingsPage() {
                       </div>
                     </div>
 
-                    {/* Admin-only note */}
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Admin note (optional — internal only, never shown to customer)</label>
+                    {/* Optional internal note — attached to the scheduling
+                        action as consultationAdminNote, or to the next status
+                        change as adminNotes. Never shown to the customer. */}
+                    <details>
+                      <summary className="text-xs text-gray-500 cursor-pointer select-none hover:text-primary">Optional internal note (never shown to customer)</summary>
                       <input
                         value={noteDrafts[b._id] || ''}
                         onChange={e => setNoteDrafts(prev => ({ ...prev, [b._id]: e.target.value }))}
-                        placeholder="e.g. Consultation fixed for Sunday 4pm"
-                        className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                        placeholder="e.g. Follow up if customer skips scheduled slot"
+                        data-testid={`admin-note-${b._id}`}
+                        className="mt-2 w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
                       />
-                      <p className="text-[10px] text-gray-400 mt-1">Applied to the next status change you make above.</p>
-                    </div>
+                      <p className="text-[10px] text-gray-400 mt-1">Applied to whichever action you take next (schedule or status change).</p>
+                    </details>
                   </div>
                 )}
               </div>

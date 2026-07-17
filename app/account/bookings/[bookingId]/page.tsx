@@ -28,9 +28,11 @@ interface BookingDetail {
   // "we'll notify you" message instead. No mock data.
   consultationDate?: string;   // ISO date/time
   consultationTime?: string;   // HH:MM
-  meetingMode?: string;        // 'video' | 'phone' | 'in-person'
+  meetingType?: string;        // 'google_meet' | 'whatsapp' | 'phone' | 'offline'
+  meetingMode?: string;        // legacy fallback
   meetingLink?: string;
   meetingAddress?: string;
+  customerNote?: string;
   formData?: Record<string, any>;
   timeline: { field: string; newValue: string; timestamp: string }[];
 }
@@ -88,16 +90,25 @@ export default function BookingDetailPage() {
   };
   useEffect(() => { if (bookingId) load('full'); /* eslint-disable-next-line */ }, [bookingId]);
 
-  // Consultation info — check both top-level fields AND formData nested (admin
-  // panel might store consultation details either way in the current backend).
+  // Consultation info — check top-level fields first (backend contract),
+  // then formData nested (legacy). Never fabricate data.
   const consultation = useMemo(() => {
     if (!data) return { scheduled: false } as any;
     const fd = data.formData || {};
     const dateRaw = data.consultationDate || fd.consultationDate || fd.consultation_date;
     const timeRaw = data.consultationTime || fd.consultationTime || fd.consultation_time;
-    const mode    = data.meetingMode     || fd.meetingMode     || fd.meeting_mode;
+    const typeRaw = (data as any).meetingType || data.meetingMode || fd.meetingType || fd.meetingMode || fd.meeting_mode;
     const link    = data.meetingLink     || fd.meetingLink     || fd.meeting_link;
     const address = data.meetingAddress  || fd.meetingAddress  || fd.meeting_address;
+    const customerNote = data.customerNote || fd.customerNote || fd.customer_note;
+    // Human-readable label for backend enum values.
+    const TYPE_LABELS: Record<string, string> = {
+      google_meet: 'Google Meet',
+      whatsapp: 'WhatsApp Call',
+      phone: 'Phone Call',
+      offline: 'Offline (in-person)',
+    };
+    const mode = typeRaw ? (TYPE_LABELS[typeRaw as string] || typeRaw) : undefined;
     const scheduled = !!(dateRaw && (data.bookingStatus === 'consultation_scheduled' || data.bookingStatus === 'in_progress'));
     let dt: Date | null = null;
     if (dateRaw) {
@@ -107,7 +118,7 @@ export default function BookingDetailPage() {
       const parsed = new Date(iso as string);
       dt = isNaN(parsed.getTime()) ? null : parsed;
     }
-    return { scheduled, dt, dateRaw, timeRaw, mode, link, address };
+    return { scheduled, dt, dateRaw, timeRaw, mode, link, address, customerNote };
   }, [data]);
   const countdown = useCountdown(consultation.scheduled ? consultation.dt : null);
 
@@ -191,9 +202,16 @@ export default function BookingDetailPage() {
                 <Field label="Time" value={<span className="font-semibold text-gray-800">{consultation.dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>} />
               )}
               {consultation.mode && (
-                <Field label="Meeting Mode" value={<span className="font-semibold text-gray-800 capitalize">{consultation.mode}</span>} />
+                <Field label="Meeting Type" value={<span className="font-semibold text-gray-800">{consultation.mode}</span>} />
               )}
             </div>
+
+            {consultation.customerNote && (
+              <div className="bg-orange-50 border border-orange-100 rounded-xl p-3 text-xs text-gray-700 leading-relaxed" data-testid="customer-note">
+                <p className="text-[10px] font-semibold text-primary uppercase tracking-wider mb-1">Note from your consultant</p>
+                {consultation.customerNote}
+              </div>
+            )}
 
             {countdown && (
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-center gap-2">
