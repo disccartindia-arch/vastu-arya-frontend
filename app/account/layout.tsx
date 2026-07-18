@@ -19,6 +19,7 @@ import { useAuthStore } from '../../store/authStore';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import { LayoutDashboard, Calendar, CreditCard, Package, User, FileText } from 'lucide-react';
+import { useFcmToken } from '../../hooks/useFcmToken';
 
 // Customer menu (per production spec) — Overview / Bookings / Orders /
 // Payments / Invoices / Profile. Activity & Refunds are hidden from
@@ -41,6 +42,11 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   useEffect(() => {
     if (!user) router.push('/login');
   }, [user, router]);
+
+  // Ask for browser push permission on the first authenticated dashboard
+  // visit. Silent-degrades if Firebase env isn't configured, the browser
+  // doesn't support FCM, or the user has already denied permission.
+  useFcmToken();
 
   if (!user) return null;
 

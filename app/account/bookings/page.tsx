@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { accountAPI } from '../../../lib/accountAPI';
 import { formatPrice } from '../../../lib/utils';
+import { formatInstantIST } from '../../../lib/datetime';
 import { LoadingSkeleton, EmptyState, ErrorState, Pagination } from '../../../components/account/AccountStates';
 import { Search, Calendar, ChevronRight } from 'lucide-react';
 
@@ -72,7 +73,7 @@ export default function MyBookingsPage() {
                   <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${BOOKING_BADGE[b.bookingStatus] || 'bg-gray-100'}`}>{b.bookingStatus?.replace(/_/g, ' ')}</span>
                 </div>
                 <p className="font-medium text-gray-800 text-sm truncate">{b.serviceName}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{formatPrice(b.amount)} · Updated {new Date(b.updatedAt).toLocaleDateString('en-IN')}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{formatPrice(b.amount)} · Updated {formatInstantIST(b.updatedAt, { withTime: false, withTz: false })}</p>
               </div>
               <ChevronRight size={16} className="text-gray-300 flex-shrink-0" />
             </Link>

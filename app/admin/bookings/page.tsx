@@ -31,6 +31,7 @@
 import { useEffect, useState } from 'react';
 import { bookingsAPI } from '../../../lib/api';
 import { formatPrice } from '../../../lib/utils';
+import { formatIST, formatInstantIST } from '../../../lib/datetime';
 import toast from 'react-hot-toast';
 import { Calendar, Phone, Mail, Search, RefreshCw, Copy, ChevronDown, ExternalLink } from 'lucide-react';
 
@@ -242,7 +243,7 @@ export default function BookingsPage() {
                     <div className="grid grid-cols-2 gap-3 pt-3 text-sm">
                       <div className="flex items-center gap-2 text-gray-600"><Phone size={12} className="text-gray-400" />{b.phone}</div>
                       {b.email && <div className="flex items-center gap-2 text-gray-600 truncate"><Mail size={12} className="text-gray-400 flex-shrink-0" />{b.email}</div>}
-                      <div className="text-xs text-gray-400">Last updated: {new Date(b.updatedAt).toLocaleString('en-IN')}</div>
+                      <div className="text-xs text-gray-400">Last updated: {formatInstantIST(b.updatedAt)}</div>
                       <div className="flex items-center gap-2">
                         <button onClick={() => copyId(b.bookingId)} className="flex items-center gap-1 text-xs text-primary font-medium hover:underline"><Copy size={11} /> Copy Booking ID</button>
                         <a href={`/status/${b.bookingId}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-gray-400 hover:text-primary"><ExternalLink size={11} /> View public page</a>

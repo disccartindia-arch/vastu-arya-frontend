@@ -216,3 +216,23 @@ export const productGeneratorAPI = {
   generate: (d: { input: string; category: string }) =>
     api.post('/product-generator/generate', d),
 };
+
+// ── Notifications (FCM) ───────────────────────────────────────────────────────
+//
+// Frontend integration lives in hooks/useFcmToken.ts.
+//
+// BACKEND CONTRACT (required — endpoint currently returns 404 on production):
+//   POST /api/notifications/fcm-token
+//     Bearer JWT (existing vastu_token)
+//     body: { token: string; platform: 'web' | 'android' | 'ios'; userAgent?: string }
+//     response: { success: true }
+//
+// The hook silently stashes the token in localStorage under
+// `vastu_fcm_pending_token` when the endpoint 404s so the next visit (once
+// the backend implements it) retries automatically. No user-facing error.
+export const notificationsAPI = {
+  registerFcmToken: (d: { token: string; platform: 'web' | 'android' | 'ios'; userAgent?: string }) =>
+    api.post('/notifications/fcm-token', d),
+  unregisterFcmToken: (token: string) =>
+    api.delete(`/notifications/fcm-token/${encodeURIComponent(token)}`),
+};

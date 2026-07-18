@@ -37,6 +37,7 @@ import { useEffect, useState } from 'react';
 import Navbar from '../../../components/layout/Navbar';
 import Footer from '../../../components/layout/Footer';
 import { bookingStatusAPI, PublicBookingStatus } from '../../../lib/bookingStatusAPI';
+import { formatInstantIST } from '../../../lib/datetime';
 import {
   CheckCircle, Clock, XCircle, RefreshCw, MessageCircle, Copy,
   CalendarCheck, CalendarClock, PlayCircle, PartyPopper, ChevronDown, Shield,
@@ -350,7 +351,7 @@ export default function StatusClient({ bookingId }: StatusClientProps) {
               </div>
 
               <p className="text-xs text-gray-400 text-center">
-                Last updated {new Date(data.updatedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+                Last updated {formatInstantIST(data.updatedAt)}
               </p>
             </div>
           </div>
@@ -373,7 +374,7 @@ export default function StatusClient({ bookingId }: StatusClientProps) {
                   {data.timeline.map((t, i) => (
                     <div key={i} className="flex justify-between text-xs">
                       <span className="text-gray-500">{t.field === 'paymentStatus' ? 'Payment' : 'Booking'} → {t.newValue.replace(/_/g, ' ')}</span>
-                      <span className="text-gray-400">{new Date(t.timestamp).toLocaleDateString('en-IN')}</span>
+                      <span className="text-gray-400">{formatInstantIST(t.timestamp, { withTime: false, withTz: false })}</span>
                     </div>
                   ))}
                 </div>

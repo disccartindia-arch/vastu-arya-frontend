@@ -10,30 +10,34 @@
  *    unscheduled → notify-later message)
  *  - Verified vs unverified conditional support number
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { accountAPI } from '../../../../lib/accountAPI';
 import { formatPrice } from '../../../../lib/utils';
+import { formatIST, formatInstantIST } from '../../../../lib/datetime';
 import { LoadingSkeleton, ErrorState } from '../../../../components/account/AccountStates';
 import PaymentTimeline, { PaymentTimelineStep, StepStatus } from '../../../../components/payment/PaymentTimeline';
-import { Copy, ExternalLink, Calendar, Video, RefreshCw, Clock, MessageCircle, Phone, Link2, MapPin } from 'lucide-react';
+import { Copy, ExternalLink, Calendar, Video, RefreshCw, Clock, MessageCircle, Phone, Link2, MapPin, Mail, Bell, Send, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface BookingDetail {
   bookingId: string; name: string; serviceName: string; amount: number;
   paymentStatus: string; bookingStatus: string; createdAt: string; updatedAt: string;
   paymentId?: string;
-  // formData / notes are used by the admin panel to store consultation details.
-  // We read them optionally — if the backend doesn't populate them, we show the
-  // "we'll notify you" message instead. No mock data.
-  consultationDate?: string;   // ISO date/time
-  consultationTime?: string;   // HH:MM
+  consultationDate?: string;   // ISO date/time — IST wall-clock
+  consultationTime?: string;   // HH:MM — IST wall-clock
   meetingType?: string;        // 'google_meet' | 'whatsapp' | 'phone' | 'offline'
   meetingMode?: string;        // legacy fallback
   meetingLink?: string;
   meetingAddress?: string;
   customerNote?: string;
   formData?: Record<string, any>;
+  // Optional per-channel delivery flags. Rendered ONLY when the backend
+  // returns them; nothing is faked. See Backend Dependencies in project docs.
+  emailSent?: boolean;
+  smsSent?: boolean;
+  pushSent?: boolean;
+  whatsappSent?: boolean;
   timeline: { field: string; newValue: string; timestamp: string }[];
 }
 
@@ -75,23 +79,65 @@ export default function BookingDetailPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
+  const lastSeenUpdatedAt = useRef<string | null>(null);
 
-  const load = async (mode: 'full' | 'refresh' = 'full') => {
-    mode === 'full' ? setLoading(true) : setRefreshing(true);
+  const load = async (mode: 'full' | 'refresh' | 'silent' = 'full') => {
+    if (mode === 'full') setLoading(true);
+    else if (mode === 'refresh') setRefreshing(true);
     setError('');
     try {
       const r = await accountAPI.getBookingDetail(bookingId as string);
-      setData(r.data.data);
+      const next: BookingDetail = r.data.data;
+      // Poll-driven live updates: if the server's updatedAt changed since the
+      // last silent poll, notify the customer visually. This is the polling
+      // fallback for real-time updates until the backend exposes a SSE/WS
+      // endpoint. Reuses the existing GET endpoint — no new API needed.
+      if (
+        mode === 'silent' &&
+        lastSeenUpdatedAt.current &&
+        next?.updatedAt &&
+        next.updatedAt !== lastSeenUpdatedAt.current
+      ) {
+        toast.success('Booking updated — showing latest status.');
+      }
+      lastSeenUpdatedAt.current = next?.updatedAt || lastSeenUpdatedAt.current;
+      setData(next);
     } catch (e: any) {
-      setError(e?.response?.data?.message || 'Could not load this booking.');
+      if (mode !== 'silent') {
+        setError(e?.response?.data?.message || 'Could not load this booking.');
+      }
     } finally {
-      mode === 'full' ? setLoading(false) : setRefreshing(false);
+      if (mode === 'full') setLoading(false);
+      else if (mode === 'refresh') setRefreshing(false);
     }
   };
   useEffect(() => { if (bookingId) load('full'); /* eslint-disable-next-line */ }, [bookingId]);
 
+  // Live-updates polling fallback (backend has no SSE/WS yet). Polls every
+  // 30 s while the tab is visible; pauses in background to save battery.
+  useEffect(() => {
+    if (!bookingId) return;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const start = () => {
+      if (timer) return;
+      timer = setInterval(() => {
+        if (document.visibilityState === 'visible') load('silent');
+      }, 30_000);
+    };
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    start();
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') { load('silent'); start(); }
+      else stop();
+    });
+    return stop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookingId]);
+
   // Consultation info — check top-level fields first (backend contract),
-  // then formData nested (legacy). Never fabricate data.
+  // then formData nested (legacy). Never fabricate data. All date/time
+  // display uses lib/datetime.formatIST which treats consultationDate +
+  // consultationTime as IST wall-clock (Asia/Kolkata).
   const consultation = useMemo(() => {
     if (!data) return { scheduled: false } as any;
     const fd = data.formData || {};
@@ -101,7 +147,6 @@ export default function BookingDetailPage() {
     const link    = data.meetingLink     || fd.meetingLink     || fd.meeting_link;
     const address = data.meetingAddress  || fd.meetingAddress  || fd.meeting_address;
     const customerNote = data.customerNote || fd.customerNote || fd.customer_note;
-    // Human-readable label for backend enum values.
     const TYPE_LABELS: Record<string, string> = {
       google_meet: 'Google Meet',
       whatsapp: 'WhatsApp Call',
@@ -110,15 +155,20 @@ export default function BookingDetailPage() {
     };
     const mode = typeRaw ? (TYPE_LABELS[typeRaw as string] || typeRaw) : undefined;
     const scheduled = !!(dateRaw && (data.bookingStatus === 'consultation_scheduled' || data.bookingStatus === 'in_progress'));
-    let dt: Date | null = null;
-    if (dateRaw) {
-      const iso = typeof dateRaw === 'string' && dateRaw.length <= 10 && timeRaw
-        ? `${dateRaw}T${(timeRaw as string).length === 5 ? timeRaw : timeRaw}:00`
-        : dateRaw;
-      const parsed = new Date(iso as string);
-      dt = isNaN(parsed.getTime()) ? null : parsed;
-    }
-    return { scheduled, dt, dateRaw, timeRaw, mode, link, address, customerNote };
+    const ist = formatIST(dateRaw as string | undefined, timeRaw as string | undefined);
+    return {
+      scheduled,
+      dt: ist.dt,
+      dateRaw,
+      timeRaw,
+      mode,
+      link,
+      address,
+      customerNote,
+      istDate: ist.date,
+      istTime: ist.time,
+      istCombined: ist.combined,
+    };
   }, [data]);
   const countdown = useCountdown(consultation.scheduled ? consultation.dt : null);
 
@@ -183,7 +233,7 @@ export default function BookingDetailPage() {
             } />
           )}
         </div>
-        <div className="px-4 sm:px-5 pb-3 flex items-center gap-1 text-[11px] text-gray-400"><Clock size={11} /> Last updated {new Date(data.updatedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</div>
+        <div className="px-4 sm:px-5 pb-3 flex items-center gap-1 text-[11px] text-gray-400"><Clock size={11} /> Last updated {formatInstantIST(data.updatedAt)}</div>
       </div>
 
       {/* Consultation card */}
@@ -195,16 +245,17 @@ export default function BookingDetailPage() {
         {consultation.scheduled ? (
           <div className="space-y-3">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-              {consultation.dt && (
-                <Field label="Date" value={<span className="font-semibold text-gray-800">{consultation.dt.toLocaleDateString('en-IN', { dateStyle: 'medium' })}</span>} />
+              {consultation.istDate && (
+                <Field label="Date" value={<span data-testid="consultation-date" className="font-semibold text-gray-800">{consultation.istDate}</span>} />
               )}
-              {consultation.dt && (
-                <Field label="Time" value={<span className="font-semibold text-gray-800">{consultation.dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>} />
+              {consultation.istTime && (
+                <Field label="Time (IST)" value={<span data-testid="consultation-time" className="font-semibold text-gray-800">{consultation.istTime}</span>} />
               )}
               {consultation.mode && (
-                <Field label="Meeting Type" value={<span className="font-semibold text-gray-800">{consultation.mode}</span>} />
+                <Field label="Meeting Type" value={<span data-testid="meeting-type" className="font-semibold text-gray-800">{consultation.mode}</span>} />
               )}
             </div>
+            <p className="text-[10px] text-gray-400 -mt-1" data-testid="tz-label">All times shown in India Standard Time (IST · Asia/Kolkata)</p>
 
             {consultation.customerNote && (
               <div className="bg-orange-50 border border-orange-100 rounded-xl p-3 text-xs text-gray-700 leading-relaxed" data-testid="customer-note">
@@ -212,6 +263,17 @@ export default function BookingDetailPage() {
                 {consultation.customerNote}
               </div>
             )}
+
+            {/* Notification-delivery indicators. Rendered ONLY for channels the
+                backend actually reports on. `undefined` = channel not tracked
+                by backend yet → hidden. `false` = attempted but failed → grey.
+                `true` = delivered → primary. Never mocked. */}
+            <NotificationChannels
+              email={data.emailSent}
+              sms={data.smsSent}
+              push={data.pushSent}
+              whatsapp={data.whatsappSent}
+            />
 
             {countdown && (
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-center gap-2">
@@ -261,7 +323,7 @@ export default function BookingDetailPage() {
             {data.timeline.map((t, i) => (
               <div key={i} className="flex justify-between items-center text-xs py-1.5 border-b border-gray-50 last:border-0 gap-3">
                 <span className="text-gray-600 capitalize truncate">{t.field === 'paymentStatus' ? 'Payment' : 'Booking'} → {NICE(t.newValue)}</span>
-                <span className="text-gray-400 flex-shrink-0">{new Date(t.timestamp).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</span>
+                <span className="text-gray-400 flex-shrink-0">{formatInstantIST(t.timestamp, { withTime: true, withTz: false })}</span>
               </div>
             ))}
           </div>
@@ -287,6 +349,51 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
     <div>
       <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
       <div className="text-sm">{value}</div>
+    </div>
+  );
+}
+
+/**
+ * Per-channel notification-delivery pills.
+ *
+ * Rendered ONLY when the backend actually populates the corresponding boolean
+ * on the booking response. When a channel is `undefined` (backend does not
+ * track it yet), the pill is not rendered at all — never faked.
+ *
+ * Colour legend:
+ *   • primary  → true  (delivered)
+ *   • grey     → false (attempted, failed) — graceful, non-alarming
+ */
+function NotificationChannels({
+  email, sms, push, whatsapp,
+}: {
+  email?: boolean; sms?: boolean; push?: boolean; whatsapp?: boolean;
+}) {
+  const items: { key: string; label: string; sent?: boolean; Icon: any }[] = [];
+  if (email    !== undefined) items.push({ key: 'email',    label: 'Email',    sent: email,    Icon: Mail });
+  if (sms      !== undefined) items.push({ key: 'sms',      label: 'SMS',      sent: sms,      Icon: Send });
+  if (push     !== undefined) items.push({ key: 'push',     label: 'Push',     sent: push,     Icon: Bell });
+  if (whatsapp !== undefined) items.push({ key: 'whatsapp', label: 'WhatsApp', sent: whatsapp, Icon: MessageCircle });
+  if (items.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5" data-testid="notification-channels">
+      {items.map(({ key, label, sent, Icon }) => (
+        <span
+          key={key}
+          data-testid={`notif-${key}`}
+          data-sent={sent ? 'true' : 'false'}
+          title={sent ? `${label} notification delivered` : `${label} notification not delivered yet`}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+            sent
+              ? 'bg-orange-50 text-primary border-orange-200'
+              : 'bg-gray-50 text-gray-400 border-gray-200'
+          }`}
+        >
+          <Icon size={10} />
+          {label}
+          {sent && <Check size={10} className="ml-0.5" />}
+        </span>
+      ))}
     </div>
   );
 }

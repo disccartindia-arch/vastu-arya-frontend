@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { accountAPI } from '../../lib/accountAPI';
 import { formatPrice } from '../../lib/utils';
+import { formatInstantIST } from '../../lib/datetime';
 import { LoadingSkeleton, ErrorState } from '../../components/account/AccountStates';
 import { Calendar, CheckCircle2, Clock, ShoppingBag, CreditCard, ShieldCheck, ArrowRight } from 'lucide-react';
 
@@ -66,7 +67,7 @@ export default function AccountDashboardPage() {
             <Link href={`/account/bookings/${data.latestBooking.bookingId}`} className="flex items-center justify-between group">
               <div>
                 <p className="font-medium text-gray-800 text-sm">{data.latestBooking.serviceName}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{formatPrice(data.latestBooking.amount)} · {new Date(data.latestBooking.createdAt).toLocaleDateString('en-IN')}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{formatPrice(data.latestBooking.amount)} · {formatInstantIST(data.latestBooking.createdAt, { withTime: false, withTz: false })}</p>
               </div>
               <ArrowRight size={16} className="text-gray-300 group-hover:text-primary transition-colors" />
             </Link>
@@ -79,7 +80,7 @@ export default function AccountDashboardPage() {
             <Link href={`/account/orders/${data.latestOrder.orderId}`} className="flex items-center justify-between group">
               <div>
                 <p className="font-medium text-gray-800 text-sm">{data.latestOrder.orderId}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{formatPrice(data.latestOrder.totalAmount)} · {new Date(data.latestOrder.createdAt).toLocaleDateString('en-IN')}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{formatPrice(data.latestOrder.totalAmount)} · {formatInstantIST(data.latestOrder.createdAt, { withTime: false, withTz: false })}</p>
               </div>
               <ArrowRight size={16} className="text-gray-300 group-hover:text-primary transition-colors" />
             </Link>
@@ -93,7 +94,7 @@ export default function AccountDashboardPage() {
           <p className="text-sm text-gray-600">
             Booking <span className="font-mono">{data.latestStatusUpdate.bookingRef}</span> — {data.latestStatusUpdate.field === 'paymentStatus' ? 'Payment' : 'Booking'} status changed to <strong>{data.latestStatusUpdate.newValue.replace(/_/g, ' ')}</strong>
           </p>
-          <p className="text-xs text-gray-400 mt-1">{new Date(data.latestStatusUpdate.timestamp).toLocaleString('en-IN')}</p>
+          <p className="text-xs text-gray-400 mt-1">{formatInstantIST(data.latestStatusUpdate.timestamp)}</p>
         </div>
       )}
     </div>
