@@ -1,0 +1,50 @@
+{
+  "summary": "Phase G retest after hasHydrated + visibilitychange cleanup fixes. All 8 test cases PASS. Both fixes verified: (1) hasHydrated gate in /admin/* and /account/* layouts now correctly retains URL after hard-reload AND renders the page (no false redirect to /login while Zustand persist rehydrates). (2) Customer detail page fully renders with all 5 consultation testids (date, time, meeting-type, tz-label, customer-note). Timezone independence confirmed (America/New_York context still shows 3:30 pm IST). Notification indicators show 4 pills with correct data-sent when backend supplies flags, and hide entirely when backend omits them. Polling fires 3 GETs in 65s (initial + 30s + 60s) with 0 red console errors, and visibilitychange handler triggers an extra silent GET on tab re-activation. Firebase SW served with onBackgroundMessage + firebase-messaging-compat.js. Responsive at 375x812 works (docW=viewW=375, all 6 testids visible).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Deployment: stale next-server chunk manifest",
+        "issue": "Preview host was serving HTML referencing an OLD layout chunk hash (layout-fd6871dea6a4a846.js) after a rebuild, causing ChunkLoadError on reload. Root cause: supervisor's [program:frontend] block references `directory=/app/frontend` but the app root is `/app`, so supervisor cannot restart the frontend and the running next-server pins the pre-rebuild manifest in memory. Fixed by manually `pkill -f next-server && yarn start` at /app. Recommend updating supervisor config directory to /app.",
+        "affected_selectors": []
+      },
+      {
+        "flow": "Production Backend CORS (unchanged from iterations 1 & 2)",
+        "issue": "Render backend https://vastu-arya-backend-1.onrender.com/api still rejects Origin https://d317c2b3-166c-4af0-9b7d-90eecbbf92b6.preview.emergentagent.com. Testing continues to rely on Playwright route interception.",
+        "affected_selectors": []
+      }
+    ],
+    "design_issues": []
+  },
+  "acceptance_criteria_results": {
+    "AC_AUTH_HYDRATION_ADMIN_RELOAD": "PASS - /admin/bookings retained after F5 reload; sidebar + 'Admin Panel' + 'Bookings' page rendered (not redirected to /admin/login).",
+    "AC_CUSTOMER_DETAIL_RENDER": "PASS - consultation-date='15 Mar 2026', consultation-time='3:30 pm', meeting-type='Google Meet', tz-label='All times shown in India Standard Time (IST · Asia/Kolkata)', customer-note contains 'floor plan'.",
+    "AC_TIMEZONE_INDEPENDENCE": "PASS - with browser timezone_id='America/New_York', consultation-time still renders '3:30 pm' (IST wall-clock preserved, not converted to ET).",
+    "AC_NOTIF_WITH_FLAGS": "PASS - notification-channels visible with 4 pills. data-sent: email=true, sms=false, push=true, whatsapp=true.",
+    "AC_NOTIF_HIDDEN_WHEN_OMITTED": "PASS - locator('[data-testid=notification-channels]').count() === 0 when backend omits emailSent/smsSent/pushSent/whatsappSent.",
+    "AC_POLLING_65s": "PASS - 3 GETs in 65s (initial + 30s + 60s). 0 red console errors during polling window.",
+    "AC_VISIBILITYCHANGE_SILENT_REFRESH": "PASS - navigating to about:blank and back triggered one additional silent GET (count 3 -> 4).",
+    "AC_SW_SERVED": "PASS - HTTP 200; body contains both 'onBackgroundMessage' and 'firebase-messaging-compat.js'.",
+    "AC_RESPONSIVE_375x812": "PASS - documentElement.scrollWidth == innerWidth (375), all 6 testids (consultation-date/time/meeting-type/tz-label/customer-note/notification-channels) is_visible()=True."
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix supervisor config: /etc/supervisor/conf.d/*.conf has `directory=/app/frontend` for the frontend program — should be `/app`. This prevents `sudo supervisorctl restart frontend` from working and leaves the running next-server pinning stale chunk manifests after a rebuild. Currently the fix requires manually killing next-server and re-running `yarn start` from /app.",
+    "(Backend team, outside frontend scope) Whitelist the preview host in Render backend CORS so real E2E tests can hit production data."
+  ],
+  "critical_code_review_comments": [
+    "app/account/layout.tsx lines 48-49 and app/admin/layout.tsx lines 50-51: the hasHydrated gate uses a local React useState set in useEffect. This works empirically because Zustand persist with default localStorage synchronously rehydrates before the first effect microtask on the client — but the pattern is fragile if the store is later moved to async storage (IndexedDB, cookie). A more robust pattern would subscribe to `useAuthStore.persist.onFinishHydration` OR use `useAuthStore.persist.hasHydrated()` directly. Not a bug today, but worth a comment noting the assumption.",
+    "app/account/bookings/[bookingId]/page.tsx lines 134-137: the useEffect now properly returns cleanup that both clears the interval AND removes the visibilitychange listener. Verified via 65s polling test + about:blank navigation — no listener leak, poll count = 3, then +1 after visibility flip. Previous iteration's minor leak is now fixed.",
+    "app/account/bookings/[bookingId]/page.tsx line 84 `load` function is redefined on every render; consumed by two effects with only [bookingId] deps. Not a bug (bookingId rarely changes on the same route) but lint-disable comments are already in place.",
+    "lib/api.ts line 6 fallback URL 'https://vastu-arya-backend-1.onrender.com/api' is hardcoded — recommend failing loud in production instead of a warning when NEXT_PUBLIC_API_URL is missing (already correctly configured in test env; harmless today)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "100% (8/8 acceptance criteria PASS)"},
+  "test_credentials": "Playwright localStorage seed: vastu-auth = {state:{user:{_id,email,name,role},token},version:0}. Route intercept for POST /api/auth/login not needed this iteration because layouts hydrate directly from the seeded localStorage.",
+  "seed_data_creation": "None. All bookings and API responses mocked via page.route interception.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "1) Before ANY test, verify curl to /admin/bookings serves a layout hash that EXISTS in /app/.next/static/chunks/app/admin/ — otherwise the browser will hit ChunkLoadError. Fix: `pkill -9 -f next-server; cd /app && PORT=3000 HOST=0.0.0.0 nohup yarn start > /tmp/nextjs.log 2>&1 &`. 2) supervisor's frontend program is broken (directory=/app/frontend does not exist). 3) Playwright route order: LAST registered route wins. So register catch-all `**/api/**` FIRST and specific route (e.g., `**/api/account/bookings/BK...`) LAST — otherwise the catch-all shadows the specific handler and poll_count stays at 0. 4) Zustand persist rehydrates synchronously from localStorage when using default storage, so add_init_script seeding vastu-auth is sufficient — no auth-login stub needed. 5) All 8 Phase-G acceptance criteria verified end-to-end this iteration.",
+  "rca_of_the_issue": "Iterations 1 and 2 were blocked from verifying customer-side DOM because app/account/layout.tsx pushed to /login before Zustand persist rehydrated. Iteration 3 confirms the hasHydrated gate now correctly waits one microtask before enforcing the auth guard, allowing the persisted user to be read. Combined with the corrected visibilitychange listener cleanup in the booking detail page, all previously BLOCKED assertions now PASS. The only environmental issue encountered was a stale next-server chunk manifest (unrelated to the code fixes) — resolved by restarting the frontend process from /app instead of the non-existent /app/frontend."
+}

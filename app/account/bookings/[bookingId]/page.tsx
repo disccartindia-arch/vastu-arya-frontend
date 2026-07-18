@@ -125,12 +125,16 @@ export default function BookingDetailPage() {
       }, 30_000);
     };
     const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
-    start();
-    document.addEventListener('visibilitychange', () => {
+    const onVisibility = () => {
       if (document.visibilityState === 'visible') { load('silent'); start(); }
       else stop();
-    });
-    return stop;
+    };
+    start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId]);
 

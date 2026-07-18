@@ -7,7 +7,7 @@
  * Everything else in this array and this file is byte-for-byte
  * unchanged from the Phase C version.
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '../../store/authStore';
@@ -42,15 +42,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router    = useRouter();
   const pathname  = usePathname();
   const { user, isAdmin } = useAuthStore();
-  const [sidebarOpen, setSidebarOpen] = (require('react') as any).useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Wait for Zustand persist to rehydrate before enforcing the guard —
+  // otherwise a hard-refresh on any /admin/* URL redirects to /admin/login
+  // even for a valid admin session (the first render sees `user=null`).
+  const [hasHydrated, setHasHydrated] = useState(false);
+  useEffect(() => { setHasHydrated(true); }, []);
 
   useEffect(() => {
     if (pathname === '/admin/login') return;
+    if (!hasHydrated) return;
     if (!user) { router.push('/admin/login'); return; }
     if (!isAdmin()) { router.push('/'); }
-  }, [user, isAdmin, router, pathname]);
+  }, [hasHydrated, user, isAdmin, router, pathname]);
 
   if (pathname === '/admin/login') return <>{children}</>;
+  if (!hasHydrated) return null;
   if (!user || !isAdmin()) return null;
 
   return (

@@ -12,7 +12,7 @@
  * means every individual /account/* page doesn't re-implement the
  * guard.
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '../../store/authStore';
@@ -39,15 +39,25 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const pathname = usePathname();
   const { user } = useAuthStore();
 
+  // Zustand persist rehydrates from localStorage on the client. On a HARD
+  // navigation (page refresh / direct URL) the first render sees `user=null`
+  // even for an authenticated user, causing a false redirect to /login. We
+  // wait one frame for the persist middleware to hydrate before enforcing
+  // the guard. `hasHydrated` becomes true after the next microtask on the
+  // client, and stays true across route changes.
+  const [hasHydrated, setHasHydrated] = useState(false);
+  useEffect(() => { setHasHydrated(true); }, []);
+
   useEffect(() => {
-    if (!user) router.push('/login');
-  }, [user, router]);
+    if (hasHydrated && !user) router.push('/login');
+  }, [hasHydrated, user, router]);
 
   // Ask for browser push permission on the first authenticated dashboard
   // visit. Silent-degrades if Firebase env isn't configured, the browser
   // doesn't support FCM, or the user has already denied permission.
   useFcmToken();
 
+  if (!hasHydrated) return null;
   if (!user) return null;
 
   return (
