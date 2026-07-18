@@ -115,3 +115,28 @@ outside this feature's scope). No product bugs found. Build + type-check pass.
 notification-on-schedule is a backend hook and cannot be verified from the
 frontend — the UI intentionally does NOT claim "customer notified" (per
 AC #11). Success toast reads "Consultation scheduled and saved to booking."
+
+---
+
+## 2026-02-18 · Phase G — IST + Firebase Push + Live Updates (frontend-only)
+
+**Files created**
+- `lib/datetime.ts` — timezone-safe IST helpers (`formatIST`, `formatInstantIST`).
+- `lib/firebase.ts` — FCM SDK init, silent-degrades when env missing.
+- `hooks/useFcmToken.ts` — permission → token → backend registration hook.
+- `public/firebase-messaging-sw.js` — background push + deep-link handler.
+- `.env.example` — NEXT_PUBLIC_FIREBASE_* placeholders.
+
+**Files modified**
+- `app/account/layout.tsx` — wire `useFcmToken`, gate guard on `hasHydrated`.
+- `app/admin/layout.tsx` — gate guard on `hasHydrated`; remove `require('react')` shim.
+- `app/account/bookings/[bookingId]/page.tsx` — IST render, notification pills, 30 s polling.
+- `app/account/bookings/page.tsx` — IST timestamps.
+- `app/account/page.tsx` — IST timestamps.
+- `app/status/[bookingId]/StatusClient.tsx` — IST timestamps.
+- `app/admin/bookings/page.tsx` — IST timestamps.
+- `lib/api.ts` — `notificationsAPI.registerFcmToken()`.
+
+**Verified.** iteration_3 test report: 8/8 PASS. Timezone independence proven under `America/New_York` browser context. Notification indicators hide when backend omits flags (AC #11 anti-fake).
+
+**Backend endpoints still required** (documented for backend team, see finish summary).
